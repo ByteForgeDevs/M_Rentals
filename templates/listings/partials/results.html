@@ -1,0 +1,43 @@
+{% load humanize %}
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <p class="text-sm text-slate-600">
+    <strong class="text-slate-900">{{ total_count|intcomma }}</strong>
+    house{{ total_count|pluralize }} found
+  </p>
+  {% if filter_chips %}
+    <div class="flex flex-wrap gap-1.5">
+      {% for chip in filter_chips %}<span class="badge-muted">{{ chip }}</span>{% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% if page_obj.object_list %}
+  <div class="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    {% for listing in page_obj %}{% include "listings/partials/card.html" %}{% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <nav class="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+      {% if page_obj.has_previous %}
+        <a class="btn-outline" hx-get="?{{ querystring }}&page={{ page_obj.previous_page_number }}"
+           hx-target="#results" hx-swap="innerHTML" hx-push-url="true"
+           href="?{{ querystring }}&page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      <span class="px-3 text-sm text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="btn-outline" hx-get="?{{ querystring }}&page={{ page_obj.next_page_number }}"
+           hx-target="#results" hx-swap="innerHTML" hx-push-url="true"
+           href="?{{ querystring }}&page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% else %}
+  <div class="mt-5 card p-10 text-center">
+    <h2 class="text-lg font-semibold">No houses match those filters</h2>
+    <p class="mx-auto mt-2 max-w-md text-sm text-slate-600">
+      Try widening the price range, or search a nearby landmark instead of an estate name —
+      new buildings are often listed by the landmark closest to them.
+    </p>
+    <a href="{% url 'listings:search' %}" class="btn-outline mt-5">Clear filters</a>
+  </div>
+{% endif %}

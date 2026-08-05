@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Tenant verification — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-2xl px-4 py-8">
+  <h1 class="text-3xl font-bold">Tenant verification</h1>
+  <p class="mt-1 text-slate-600">
+    Verified tenants get replies faster, because landlords know they are dealing with a real person.
+  </p>
+
+  {% if verification and verification.is_rejected and verification.reviewer_notes %}
+    <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+      <p class="font-semibold">Your last submission was rejected</p>
+      <p class="mt-1">{{ verification.reviewer_notes }}</p>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="mt-8 space-y-6" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="card space-y-4 p-6">
+      <h2 class="text-lg font-semibold">Your identity</h2>
+      {% include "partials/field.html" with field=form.national_id_number %}
+      {% include "partials/field.html" with field=form.national_id_front %}
+      {% include "partials/field.html" with field=form.national_id_back %}
+      {% include "partials/field.html" with field=form.selfie %}
+    </section>
+
+    <section class="card space-y-4 p-6">
+      <h2 class="text-lg font-semibold">Income (optional)</h2>
+      <p class="text-sm text-slate-500">Helps landlords take your enquiry seriously. You can skip this.</p>
+      {% include "partials/field.html" with field=form.employer_name %}
+      {% include "partials/field.html" with field=form.income_document %}
+    </section>
+
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn-primary px-6 py-3">Submit for review</button>
+      <a href="{% url 'verification:status' %}" class="btn-outline px-6 py-3">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

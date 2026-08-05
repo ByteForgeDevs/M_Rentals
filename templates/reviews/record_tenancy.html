@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Record a tenancy — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-2xl px-4 py-8">
+  <h1 class="text-3xl font-bold">Record a tenancy</h1>
+  <p class="mt-1 text-slate-600">
+    Confirm who rented <span class="font-semibold">{{ listing.title }}</span>. Once recorded, you can
+    review them and they can review you — nobody else can.
+  </p>
+
+  <form method="post" class="card mt-8 space-y-5 p-6" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+    {% include "partials/field.html" with field=form.tenant_identifier %}
+    <div class="grid gap-4 sm:grid-cols-2">
+      {% include "partials/field.html" with field=form.started_on %}
+      {% include "partials/field.html" with field=form.ended_on %}
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button type="submit" class="btn-primary px-6 py-2.5">Record tenancy</button>
+      <a href="{% url 'listings:manage' listing.slug %}" class="btn-outline px-6 py-2.5">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

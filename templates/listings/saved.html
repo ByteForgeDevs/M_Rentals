@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Saved houses — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-6xl px-4 py-8">
+  <h1 class="text-3xl font-bold">Saved houses</h1>
+  <p class="mt-1 text-slate-600">Your shortlist. Compare the landmark photos before you spend fare.</p>
+
+  {% if entries %}
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {% for entry in entries %}
+        {% include "listings/partials/card.html" with listing=entry.listing %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card mt-8 p-10 text-center">
+      <h2 class="text-lg font-semibold">Nothing saved yet</h2>
+      <p class="mt-2 text-sm text-slate-600">Save houses while you browse and they will show up here.</p>
+      <a href="{% url 'listings:search' %}" class="btn-primary mt-5">Find a house</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

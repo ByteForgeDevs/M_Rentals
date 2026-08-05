@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sign in — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-md px-4 py-12">
+  <h1 class="text-3xl font-bold">Sign in</h1>
+  <p class="mt-1 text-slate-600">Use the email or phone number you signed up with.</p>
+
+  <form method="post" class="card mt-8 space-y-5 p-6" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+    {% include "partials/field.html" with field=form.username %}
+    {% include "partials/field.html" with field=form.password %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="btn-primary w-full py-3">Sign in</button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-slate-600">
+    New here? <a href="{% url 'accounts:signup' %}" class="font-semibold text-brand hover:underline">Create an account</a>
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-semibold tracking-tight text-slate-900;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2;
+  }
+}
+
+@layer components {
+  /* Brand voice: direct, structural, confident. Buttons follow suit. */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm
+           font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-600 active:bg-brand-700;
+  }
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-slate-800;
+  }
+  .btn-outline {
+    @apply btn border border-slate-300 bg-white text-slate-800 hover:border-brand hover:text-brand;
+  }
+  .btn-ghost {
+    @apply btn text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+  }
+  .btn-danger {
+    @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
+  }
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white shadow-card;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .badge-verified {
+    @apply badge bg-brand-50 text-brand-700 ring-1 ring-inset ring-brand-200;
+  }
+  .badge-muted {
+    @apply badge bg-slate-100 text-slate-600;
+  }
+  .badge-warn {
+    @apply badge bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+  .field-help {
+    @apply mt-1 text-xs text-slate-500;
+  }
+  .field-error {
+    @apply mt-1 text-xs font-medium text-red-600;
+  }
+  .wordmark {
+    @apply font-bold uppercase tracking-wordmark text-brand;
+  }
+  .prose-tight :where(p) {
+    @apply text-slate-600;
+  }
+}
