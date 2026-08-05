@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}Dashboard — {{ SITE_NAME }}{% endblock %}
+{% block title %}Dashboard | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
 <div class="mx-auto w-full max-w-6xl px-4 py-8">
@@ -46,7 +46,7 @@
       <div class="card p-5"><dt class="text-sm text-slate-500">Total views</dt><dd class="mt-1 text-3xl font-bold">{{ total_views|intcomma }}</dd></div>
       <div class="card p-5">
         <dt class="text-sm text-slate-500">Your rating</dt>
-        <dd class="mt-1 text-3xl font-bold">{% if rating.count %}{{ rating.avg|floatformat:1 }}{% else %}—{% endif %}</dd>
+        <dd class="mt-1 text-3xl font-bold">{% if rating.count %}{{ rating.avg|floatformat:1 }}{% else %}<span class="text-lg text-slate-400">Not rated</span>{% endif %}</dd>
         <dd class="text-xs text-slate-500">{{ rating.count }} review{{ rating.count|pluralize }}</dd>
       </div>
     </dl>
@@ -79,7 +79,7 @@
         </ul>
       {% else %}
         <div class="card mt-4 p-8 text-center">
-          <p class="text-sm text-slate-600">No listings yet. Post your first house — it takes about five minutes.</p>
+          <p class="text-sm text-slate-600">No listings yet. Post your first house. It takes about five minutes.</p>
           <a href="{% url 'listings:create' %}" class="btn-primary mt-4">Post a house</a>
         </div>
       {% endif %}

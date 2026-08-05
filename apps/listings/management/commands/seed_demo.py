@@ -55,7 +55,7 @@ LISTINGS = [
         "landmark_description": (
             "From Quickmart Ruaka, walk towards Banana on the left side of the road. "
             "Pass the mosque, take the second murram lane on your left. Blue gate, "
-            "third building — the one with the green water tanks on the roof."
+            "third building, the one with the green water tanks on the roof."
         ),
         "bedrooms": 2,
         "bathrooms": 1,
@@ -65,7 +65,7 @@ LISTINGS = [
         "description": (
             "Third floor, faces east so you get morning sun in the sitting room. "
             "Borehole plus county water, so taps do not run dry. Tokens meter is "
-            "yours alone — the photo of the meter is in the gallery. Rent is "
+            "yours alone, and the photo of the meter is in the gallery. Rent is "
             "exclusive of water and electricity. One month deposit."
         ),
         "amenities": ["has_parking", "has_security", "has_borehole_backup"],
@@ -89,7 +89,7 @@ LISTINGS = [
         "description": (
             "Self-contained bedsitter with its own shower and toilet. Water is "
             "included in the rent because the compound is on borehole. Caretaker "
-            "lives on site. Good for one person working in town — the stage is a "
+            "lives on site. Good for one person working in town, since the stage is a "
             "seven minute walk."
         ),
         "amenities": ["has_water_included", "has_security"],
@@ -103,7 +103,7 @@ LISTINGS = [
         "landmark_description": (
             "From Nyali Cinemax head towards Links Road. After the second roundabout "
             "take the lane next to the pharmacy. The court has a white wall and a "
-            "manned gate — ask for Palm Court, house number 6."
+            "manned gate. Ask for Palm Court, house number 6."
         ),
         "bedrooms": 3,
         "bathrooms": 2,
@@ -432,7 +432,7 @@ class Command(BaseCommand):
         image = Image.new("RGB", (640, 400), "#E9EEF2")
         draw = ImageDraw.Draw(image)
         draw.rectangle([20, 20, 620, 380], outline="#1B9D80", width=3)
-        draw.text((50, 180), "DEMO DOCUMENT — NOT A REAL ID", fill="#0F172A")
+        draw.text((50, 180), "DEMO DOCUMENT: NOT A REAL ID", fill="#0F172A")
         return self._to_file(image, name)
 
     def _to_file(self, image: Image.Image, name: str) -> ContentFile:

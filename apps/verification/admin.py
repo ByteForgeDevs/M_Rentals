@@ -19,7 +19,7 @@ class BaseVerificationAdmin(admin.ModelAdmin):
     @admin.display(description=_("ID document"))
     def id_preview(self, obj):
         if not obj.national_id_front:
-            return "—"
+            return "None"
         return format_html(
             '<a href="{0}" target="_blank" rel="noopener">'
             '<img src="{0}" style="max-height:220px;border-radius:8px" /></a>',

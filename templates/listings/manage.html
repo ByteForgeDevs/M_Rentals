@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}Manage {{ listing.title }} — {{ SITE_NAME }}{% endblock %}
+{% block title %}Manage {{ listing.title }} | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
 <div class="mx-auto w-full max-w-4xl px-4 py-8">
@@ -35,7 +35,7 @@
       </div>
     {% else %}
       <p class="mt-3 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-800">
-        Everything checks out — full photo set and a verified landlord.
+        Everything checks out: full photo set and a verified landlord.
       </p>
       {% if not listing.is_published %}
         <form method="post" action="{% url 'listings:publish' listing.slug %}" class="mt-5">{% csrf_token %}
@@ -66,7 +66,7 @@
             <div>
               <a href="{% url 'accounts:public_profile' tenancy.tenant.pk %}" class="font-medium hover:text-brand">{{ tenancy.tenant.full_name }}</a>
               <p class="text-xs text-slate-500">
-                {{ tenancy.started_on|date:"M Y" }} – {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
+                {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
               </p>
             </div>
             {% if not tenancy.has_tenant_review %}

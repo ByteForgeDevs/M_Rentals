@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block title %}{{ listing.title }} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ listing.title }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ listing.bedrooms_label }} in {{ listing.location_summary }} at KES {{ listing.rent_amount|floatformat:0|intcomma }} per month.{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
 
   {% if is_owner and not listing.is_published %}
     <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-      This listing is <strong>{{ listing.get_status_display|lower }}</strong> — only you can see it.
+      This listing is <strong>{{ listing.get_status_display|lower }}</strong>, so only you can see it.
       <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold underline">Manage it here</a>.
     </div>
   {% endif %}
@@ -70,7 +70,7 @@
              href="https://www.google.com/maps/search/?api=1&query={{ listing.latitude }},{{ listing.longitude }}">
             Open approximate pin in Maps
           </a>
-          <p class="field-help">The pin is a bonus — the written directions above are the reliable part.</p>
+          <p class="field-help">The pin is a bonus. The written directions above are the reliable part.</p>
         {% endif %}
       </section>
 
@@ -96,7 +96,7 @@
           <h2 class="text-lg font-semibold">Walkthrough video</h2>
           <a href="{{ listing.walkthrough_video_url }}" target="_blank" rel="noopener nofollow"
              class="btn-outline mt-3">Watch the walkthrough</a>
-          <p class="field-help">Opens on the landlord's video host — data use is on you, so check your bundle.</p>
+          <p class="field-help">Opens on the landlord's video host, so data use is on you. Check your bundle.</p>
         </section>
       {% endif %}
 

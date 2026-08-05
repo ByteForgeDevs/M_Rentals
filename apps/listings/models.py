@@ -196,7 +196,7 @@ class Listing(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.title} — {self.area}, {self.county}"
+        return f"{self.title} ({self.area}, {self.county})"
 
     def get_absolute_url(self):
         return reverse("listings:detail", kwargs={"slug": self.slug})
@@ -314,7 +314,7 @@ class ListingPhoto(models.Model):
         ordering = ["sort_order", "uploaded_at"]
 
     def __str__(self):
-        return f"{self.get_category_display()} — {self.listing.title}"
+        return f"{self.get_category_display()}: {self.listing.title}"
 
 
 class SavedListing(models.Model):

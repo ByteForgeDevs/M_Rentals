@@ -46,7 +46,7 @@ class ListingForm(StyledFormMixin, forms.ModelForm):
             "description": forms.Textarea(
                 attrs={
                     "rows": 5,
-                    "placeholder": _("What is the house like? Be honest — reviews check this."),
+                    "placeholder": _("What is the house like? Be honest, because reviews check this."),
                 }
             ),
             "area": forms.TextInput(attrs={"placeholder": _("e.g. Ruaka")}),
@@ -84,7 +84,7 @@ class ListingForm(StyledFormMixin, forms.ModelForm):
         if len(value) < 30:
             raise ValidationError(
                 _(
-                    "Give real directions — at least a sentence. This is what replaces the "
+                    "Give real directions, at least a sentence. This is what replaces the "
                     "map pin for new buildings."
                 )
             )

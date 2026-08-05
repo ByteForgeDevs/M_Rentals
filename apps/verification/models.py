@@ -128,7 +128,7 @@ class LandlordVerification(BaseVerification):
         verbose_name_plural = _("landlord verifications")
 
     def __str__(self):
-        return f"Landlord verification — {self.user} ({self.get_status_display()})"
+        return f"Landlord verification for {self.user} ({self.get_status_display()})"
 
 
 class TenantVerification(BaseVerification):
@@ -154,4 +154,4 @@ class TenantVerification(BaseVerification):
         verbose_name_plural = _("tenant verifications")
 
     def __str__(self):
-        return f"Tenant verification — {self.user} ({self.get_status_display()})"
+        return f"Tenant verification for {self.user} ({self.get_status_display()})"

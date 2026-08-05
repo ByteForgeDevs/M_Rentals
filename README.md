@@ -12,7 +12,7 @@ real, and is this person real?*
 | **Mandatory structured photo sets** | Every published listing must carry a photo of the building exterior, gate/entrance, room interior, water/electricity meter and the nearest landmark. No complete set, no publication. |
 | **Landmark-first location** | Kenyan renters navigate by "200m past Quickmart Ruaka, blue gate", not by a map pin. Directions and walking time from a named landmark are required fields; GPS is optional. |
 | **Publication gating** | A listing can only go live when the landlord is verified *and* the photo set is complete. Both rules are enforced in the model, not just the UI. |
-| **Tenancy-gated two-way reviews** | The landlord records who actually rented the unit. That single act unlocks the tenant to review the landlord and the landlord to review the tenant — nobody else can review either side. |
+| **Tenancy-gated two-way reviews** | The landlord records who actually rented the unit. That single act unlocks the tenant to review the landlord and the landlord to review the tenant. Nobody else can review either side. |
 | **Search and filter** | Free text across landmarks and descriptions, plus county, price range, bedrooms, property type, verified-landlord-only and sorting. HTMX swaps just the results grid. |
 
 Deliberately **out of scope** for this MVP: in-app messaging, M-Pesa escrow,
@@ -21,7 +21,7 @@ and a low-data mode.
 ## Stack
 
 Server-rendered Django 5.2 with HTMX for partial updates and Tailwind CSS for
-styling. No REST API and no separate JavaScript frontend — every page is a
+styling. No REST API and no separate JavaScript frontend. Every page is a
 Django template. HTMX is vendored locally rather than loaded from a CDN.
 
 ```
@@ -106,7 +106,7 @@ All settings read from the environment, with development-friendly defaults:
 | `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma separated. |
 | `DATABASE_URL` | bundled SQLite | Set to a Postgres URL for production and uncomment `psycopg` in `requirements.txt`. |
 
-The domain rules live at the bottom of `config/settings.py` —
+The domain rules live at the bottom of `config/settings.py`.
 `LISTING_REQUIRED_PHOTO_CATEGORIES` is the list a listing must satisfy before it
 can be published.
 

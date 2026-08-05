@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ person.full_name }} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ person.full_name }} | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
 <div class="mx-auto w-full max-w-4xl px-4 py-8">
@@ -32,14 +32,14 @@
       <div>
         <dt class="text-slate-500">As a landlord</dt>
         <dd class="text-xl font-bold">
-          {% if landlord_review_count %}{{ landlord_rating|floatformat:1 }}/5{% else %}—{% endif %}
+          {% if landlord_review_count %}{{ landlord_rating|floatformat:1 }}/5{% else %}Not rated{% endif %}
         </dd>
         <dd class="text-xs text-slate-500">{{ landlord_review_count }} review{{ landlord_review_count|pluralize }}</dd>
       </div>
       <div>
         <dt class="text-slate-500">As a tenant</dt>
         <dd class="text-xl font-bold">
-          {% if tenant_review_count %}{{ tenant_rating|floatformat:1 }}/5{% else %}—{% endif %}
+          {% if tenant_review_count %}{{ tenant_rating|floatformat:1 }}/5{% else %}Not rated{% endif %}
         </dd>
         <dd class="text-xs text-slate-500">{{ tenant_review_count }} review{{ tenant_review_count|pluralize }}</dd>
       </div>

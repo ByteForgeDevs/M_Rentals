@@ -24,7 +24,7 @@ def write(name, body):
     print("wrote", name)
 
 
-# Icon only — black mark, for favicons, app icons and tight spaces.
+# Icon only: black mark, for favicons, app icons and tight spaces.
 write(
     "logo-icon.svg",
     f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {iw} {ih}" role="img" aria-label="Mrentals">

@@ -87,7 +87,7 @@ def review_landlord(request, pk: int):
         review.author = request.user
         review.landlord = tenancy.landlord
         review.save()
-        messages.success(request, "Thanks — your review is now on their profile.")
+        messages.success(request, "Thanks. Your review is now on their profile.")
         return redirect("accounts:public_profile", pk=tenancy.landlord_id)
 
     return render(

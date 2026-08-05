@@ -69,7 +69,7 @@ class Tenancy(models.Model):
 
 
 class LandlordReview(models.Model):
-    """A tenant rating their landlord — the trust signal renters care about."""
+    """A tenant rating their landlord: the trust signal renters care about."""
 
     tenancy = models.OneToOneField(
         Tenancy, on_delete=models.CASCADE, related_name="landlord_review"

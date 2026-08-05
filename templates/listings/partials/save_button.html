@@ -3,6 +3,6 @@
       method="post" action="{% url 'listings:toggle_save' listing.slug %}">
   {% csrf_token %}
   <button type="submit" class="{% if is_saved %}btn-dark{% else %}btn-outline{% endif %} w-full">
-    {% if is_saved %}Saved — remove{% else %}Save this house{% endif %}
+    {% if is_saved %}Remove from saved{% else %}Save this house{% endif %}
   </button>
 </form>

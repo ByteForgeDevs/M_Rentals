@@ -2,7 +2,7 @@
   "name": "mrentals",
   "version": "1.0.0",
   "private": true,
-  "description": "Mrentals — a trust-first rental marketplace for Kenya",
+  "description": "Mrentals: a trust-first rental marketplace for Kenya",
   "scripts": {
     "build:css": "tailwindcss -i ./assets/css/input.css -o ./static/css/site.css --minify",
     "watch:css": "tailwindcss -i ./assets/css/input.css -o ./static/css/site.css --watch",

@@ -12,11 +12,11 @@ from .models import LandlordReview, TenantReview, Tenancy
 User = get_user_model()
 
 RATING_CHOICES = [
-    (5, _("5 — Excellent")),
-    (4, _("4 — Good")),
-    (3, _("3 — Okay")),
-    (2, _("2 — Poor")),
-    (1, _("1 — Terrible")),
+    (5, _("5: Excellent")),
+    (4, _("4: Good")),
+    (3, _("3: Okay")),
+    (2, _("2: Poor")),
+    (1, _("1: Terrible")),
 ]
 
 
@@ -109,7 +109,7 @@ class RatingFormMixin(StyledFormMixin):
         comment = (self.cleaned_data.get("comment") or "").strip()
         if len(comment) < 20:
             raise ValidationError(
-                _("Write at least a sentence — this is what other people rely on.")
+                _("Write at least a sentence. This is what other people rely on.")
             )
         return comment
 

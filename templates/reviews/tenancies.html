@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Tenancies &amp; reviews — {{ SITE_NAME }}{% endblock %}
+{% block title %}Tenancies &amp; reviews | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
 <div class="mx-auto w-full max-w-5xl px-4 py-8">
@@ -19,7 +19,7 @@
               <p class="mt-1 text-sm text-slate-500">
                 Landlord:
                 <a href="{% url 'accounts:public_profile' tenancy.landlord.pk %}" class="hover:text-brand">{{ tenancy.landlord.full_name }}</a>
-                · {{ tenancy.started_on|date:"M Y" }} – {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
+                · {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
               </p>
             </div>
             {% if tenancy.has_landlord_review %}
@@ -47,7 +47,7 @@
               <a href="{% url 'accounts:public_profile' tenancy.tenant.pk %}" class="font-semibold hover:text-brand">{{ tenancy.tenant.full_name }}</a>
               <p class="mt-1 text-sm text-slate-500">
                 {{ tenancy.listing.title }} ·
-                {{ tenancy.started_on|date:"M Y" }} – {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
+                {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
               </p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
