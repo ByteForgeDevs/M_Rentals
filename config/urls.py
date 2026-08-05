@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.static import serve
 
 admin.site.site_header = "Mrentals admin"
 admin.site.site_title = "Mrentals admin"
@@ -18,3 +19,14 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+elif settings.SERVE_MEDIA_FILES:
+    # WhiteNoise only handles collected static files, so user uploads still need
+    # a route. Listing photos are the whole product, which makes this worth the
+    # modest cost of serving them through the app at MVP traffic levels.
+    urlpatterns += [
+        re_path(
+            r"^%s(?P<path>.*)$" % settings.MEDIA_URL.lstrip("/"),
+            serve,
+            {"document_root": settings.MEDIA_ROOT},
+        )
+    ]

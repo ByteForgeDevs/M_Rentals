@@ -104,7 +104,11 @@ All settings read from the environment, with development-friendly defaults:
 | `DJANGO_SECRET_KEY` | insecure dev key | Must be set in production. |
 | `DJANGO_DEBUG` | `True` | Set to `False` in production. |
 | `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma separated. |
-| `DATABASE_URL` | bundled SQLite | Set to a Postgres URL for production and uncomment `psycopg` in `requirements.txt`. |
+| `DATABASE_URL` | bundled SQLite | Set to a Postgres URL for production. |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | empty | Comma separated, needed for custom domains. |
+| `DJANGO_MEDIA_ROOT` | `media/` | Point at a persistent volume in production. |
+| `DJANGO_SERVE_MEDIA_FILES` | `True` | Set to `False` once uploads move to object storage. |
+| `DJANGO_SECURE_SSL_REDIRECT` | `True` when `DEBUG=False` | Only disable behind a proxy that already forces HTTPS. |
 
 The domain rules live at the bottom of `config/settings.py`.
 `LISTING_REQUIRED_PHOTO_CATEGORIES` is the list a listing must satisfy before it
@@ -112,6 +116,33 @@ can be published.
 
 With `DEBUG=False`, static files are served by WhiteNoise with hashed
 filenames, so run `manage.py collectstatic` as part of deployment.
+
+## Deploying to Render
+
+`render.yaml` is a Render Blueprint that provisions the web service, and
+`build.sh` is the build step. Both assume the committed Tailwind CSS and htmx
+bundle, so the build stays pure Python and needs no Node toolchain.
+
+1. In Render, create a new Blueprint pointed at this repository.
+2. Set `DATABASE_URL` to the Postgres instance's **internal** connection string.
+3. Deploy. The build installs dependencies, runs `collectstatic`, then `migrate`.
+
+`RENDER_EXTERNAL_HOSTNAME` is injected by Render and is added to
+`ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` automatically, so the default
+`onrender.com` URL works without extra configuration.
+
+### Uploads need a disk
+
+Render replaces the container filesystem on every deploy. Listing photos and ID
+documents are user uploads, so the blueprint mounts a persistent disk at
+`/var/data/media` and sets `DJANGO_MEDIA_ROOT` to match. Disks require a paid
+instance type. On a free instance every uploaded image is lost on the next
+deploy or restart, which breaks listings, because photos are mandatory for
+publication. The longer term fix is object storage such as S3, at which point
+`DJANGO_SERVE_MEDIA_FILES` can be set to `False`.
+
+To load the demo data on Render, open a shell on the service and run
+`python manage.py seed_demo`.
 
 ## Brand
 
