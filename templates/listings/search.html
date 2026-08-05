@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Find a house | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-6xl px-4 py-8">
+  <h1 class="text-3xl font-bold">Find a house</h1>
+  <p class="mt-1 text-slate-600">Filter by what you can afford, then check the landmark photos before you travel.</p>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+      <form id="filters" method="get" action="{% url 'listings:search' %}"
+            hx-get="{% url 'listings:search' %}"
+            hx-target="#results"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+            hx-trigger="change, search, submit"
+            hx-indicator="#search-indicator"
+            class="card space-y-4 p-5">
+        <div>
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Filters</h2>
+        </div>
+
+        {% include "partials/field.html" with field=form.q %}
+        {% include "partials/field.html" with field=form.county %}
+
+        <div class="grid grid-cols-2 gap-3">
+          {% include "partials/field.html" with field=form.min_price %}
+          {% include "partials/field.html" with field=form.max_price %}
+        </div>
+
+        {% include "partials/field.html" with field=form.bedrooms %}
+        {% include "partials/field.html" with field=form.property_type %}
+
+        <div class="space-y-2 border-t border-slate-100 pt-4">
+          {% include "partials/field.html" with field=form.verified_only %}
+          {% include "partials/field.html" with field=form.has_video %}
+        </div>
+
+        {% include "partials/field.html" with field=form.sort %}
+
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {% endif %}
+
+        <div class="flex gap-2 border-t border-slate-100 pt-4">
+          <button type="submit" class="btn-primary flex-1">Apply</button>
+          <a href="{% url 'listings:search' %}" class="btn-outline">Clear</a>
+        </div>
+      </form>
+    </aside>
+
+    <section>
+      <div id="search-indicator" class="htmx-indicator mb-3 text-sm text-slate-500">Searching…</div>
+      <div id="results">
+        {% include "listings/partials/results.html" %}
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  .htmx-indicator { display: none; }
+  .htmx-request #search-indicator, .htmx-request.htmx-indicator { display: block; }
+</style>
+{% endblock %}

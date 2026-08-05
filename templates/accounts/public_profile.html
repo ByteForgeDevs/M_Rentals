@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ person.full_name }} | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-4xl px-4 py-8">
+  <div class="card p-6">
+    <div class="flex flex-wrap items-start gap-5">
+      {% if person.avatar %}
+        <img src="{{ person.avatar.url }}" alt="" class="h-20 w-20 rounded-full object-cover">
+      {% else %}
+        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-brand-50 text-2xl font-bold text-brand-700">
+          {{ person.full_name|slice:":1"|upper }}
+        </div>
+      {% endif %}
+      <div class="min-w-0 flex-1">
+        <h1 class="text-2xl font-bold">{{ person.full_name }}</h1>
+        <p class="mt-1 text-sm text-slate-500">
+          {{ person.get_role_display }} · joined {{ person.date_joined|date:"F Y" }}
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          {% if person.is_verified_landlord %}<span class="badge-verified">Verified landlord</span>{% endif %}
+          {% if person.is_verified_tenant %}<span class="badge-verified">Verified tenant</span>{% endif %}
+          {% if not person.is_verified_landlord and not person.is_verified_tenant %}
+            <span class="badge-muted">Identity not verified</span>
+          {% endif %}
+        </div>
+        {% if person.bio %}<p class="mt-4 text-slate-700">{{ person.bio|linebreaksbr }}</p>{% endif %}
+      </div>
+    </div>
+
+    <dl class="mt-6 grid grid-cols-2 gap-4 border-t border-slate-100 pt-6 text-sm sm:grid-cols-4">
+      <div>
+        <dt class="text-slate-500">As a landlord</dt>
+        <dd class="text-xl font-bold">
+          {% if landlord_review_count %}{{ landlord_rating|floatformat:1 }}/5{% else %}Not rated{% endif %}
+        </dd>
+        <dd class="text-xs text-slate-500">{{ landlord_review_count }} review{{ landlord_review_count|pluralize }}</dd>
+      </div>
+      <div>
+        <dt class="text-slate-500">As a tenant</dt>
+        <dd class="text-xl font-bold">
+          {% if tenant_review_count %}{{ tenant_rating|floatformat:1 }}/5{% else %}Not rated{% endif %}
+        </dd>
+        <dd class="text-xs text-slate-500">{{ tenant_review_count }} review{{ tenant_review_count|pluralize }}</dd>
+      </div>
+      <div>
+        <dt class="text-slate-500">Live listings</dt>
+        <dd class="text-xl font-bold">{{ active_listings|length }}</dd>
+      </div>
+    </dl>
+  </div>
+
+  {% if active_listings %}
+    <section class="mt-10">
+      <h2 class="text-xl font-bold">Houses posted by {{ person.full_name }}</h2>
+      <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% for listing in active_listings %}
+          {% include "listings/partials/card.html" with listing=listing %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="mt-10 grid gap-8 lg:grid-cols-2">
+    <div>
+      <h2 class="text-xl font-bold">What tenants say</h2>
+      {% if landlord_reviews %}
+        <ul class="mt-4 space-y-4">
+          {% for review in landlord_reviews %}
+            <li class="card p-5">
+              <div class="flex items-center justify-between gap-3">
+                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
+                <span class="badge-verified">{{ review.overall_rating|floatformat:1 }}/5</span>
+              </div>
+              <p class="mt-1 text-xs text-slate-500">
+                {{ review.tenancy.listing.title }} · {{ review.created_at|date:"M Y" }}
+              </p>
+              {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
+              <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
+                <div><dt class="inline">Repairs</dt> <dd class="inline font-semibold text-slate-700">{{ review.responsiveness }}/5</dd></div>
+                <div><dt class="inline">Deposit</dt> <dd class="inline font-semibold text-slate-700">{{ review.deposit_fairness }}/5</dd></div>
+                <div><dt class="inline">Matched listing</dt> <dd class="inline font-semibold text-slate-700">{{ review.listing_honesty }}/5</dd></div>
+              </dl>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="mt-4 text-sm text-slate-500">No landlord reviews yet.</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <h2 class="text-xl font-bold">What landlords say</h2>
+      {% if tenant_reviews %}
+        <ul class="mt-4 space-y-4">
+          {% for review in tenant_reviews %}
+            <li class="card p-5">
+              <div class="flex items-center justify-between gap-3">
+                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
+                <span class="badge-verified">{{ review.overall_rating|floatformat:1 }}/5</span>
+              </div>
+              <p class="mt-1 text-xs text-slate-500">
+                {{ review.tenancy.listing.title }} · {{ review.created_at|date:"M Y" }}
+              </p>
+              {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
+              <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
+                <div><dt class="inline">Paid on time</dt> <dd class="inline font-semibold text-slate-700">{{ review.payment_reliability }}/5</dd></div>
+                <div><dt class="inline">Property care</dt> <dd class="inline font-semibold text-slate-700">{{ review.property_care }}/5</dd></div>
+                <div><dt class="inline">Communication</dt> <dd class="inline font-semibold text-slate-700">{{ review.communication }}/5</dd></div>
+              </dl>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="mt-4 text-sm text-slate-500">No tenant reviews yet.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% load static %}
+<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+  <nav class="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3" aria-label="Main">
+    <a href="{% url 'pages:home' %}" class="flex shrink-0 items-center" aria-label="Mrentals home">
+      <img src="{% static 'img/logo-lockup.svg' %}" alt="Mrentals" class="h-10 w-auto" width="122" height="98">
+    </a>
+
+    <div class="ml-auto hidden items-center gap-1 md:flex">
+      <a href="{% url 'listings:search' %}" class="btn-ghost">Find a house</a>
+      <a href="{% url 'pages:how_it_works' %}" class="btn-ghost">How it works</a>
+
+      {% if user.is_authenticated %}
+        {% if user.is_landlord %}
+          <a href="{% url 'listings:create' %}" class="btn-outline">Post a house</a>
+        {% else %}
+          <a href="{% url 'listings:saved' %}" class="btn-ghost">Saved</a>
+        {% endif %}
+        <a href="{% url 'pages:dashboard' %}" class="btn-ghost">Dashboard</a>
+        <div class="ml-2 flex items-center gap-2">
+          <a href="{% url 'accounts:profile' %}" class="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">{{ user.display_initials }}</span>
+            <span class="hidden text-sm font-medium text-slate-700 lg:inline">{{ user.full_name }}</span>
+          </a>
+          <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+            <button type="submit" class="btn-ghost">Sign out</button>
+          </form>
+        </div>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn-ghost">Sign in</a>
+        <a href="{% url 'accounts:signup' %}" class="btn-primary">Get started</a>
+      {% endif %}
+    </div>
+
+    <details class="relative ml-auto md:hidden">
+      <summary class="btn-outline list-none cursor-pointer" aria-label="Open menu">Menu</summary>
+      <div class="absolute right-0 mt-2 w-60 rounded-xl border border-slate-200 bg-white p-2 shadow-card">
+        <a href="{% url 'listings:search' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Find a house</a>
+        <a href="{% url 'pages:how_it_works' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">How it works</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'pages:dashboard' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Dashboard</a>
+          {% if user.is_landlord %}
+            <a href="{% url 'listings:create' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Post a house</a>
+          {% else %}
+            <a href="{% url 'listings:saved' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Saved houses</a>
+          {% endif %}
+          <a href="{% url 'reviews:tenancies' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Tenancies &amp; reviews</a>
+          <a href="{% url 'accounts:profile' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Profile</a>
+          <form method="post" action="{% url 'accounts:logout' %}" class="border-t border-slate-100 pt-1">{% csrf_token %}
+            <button type="submit" class="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Sign in</a>
+          <a href="{% url 'accounts:signup' %}" class="mt-1 block rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white">Get started</a>
+        {% endif %}
+      </div>
+    </details>
+  </nav>
+</header>

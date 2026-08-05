@@ -1,0 +1,40 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ SITE_NAME }} | {{ SITE_TAGLINE }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Verified landlords and landmark-accurate directions for long-term rentals in Kenya.{% endblock %}">
+  <meta name="theme-color" content="#1B9D80">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="flex min-h-full flex-col bg-slate-50">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
+
+  {% include "partials/nav.html" %}
+
+  <main id="main" class="flex-1">
+    {% if messages %}
+      <div class="mx-auto w-full max-w-6xl px-4 pt-4">
+        {% for message in messages %}
+          <div class="mb-2 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm
+            {% if message.tags == 'success' %}border-brand-200 bg-brand-50 text-brand-800
+            {% elif message.tags == 'error' %}border-red-200 bg-red-50 text-red-800
+            {% elif message.tags == 'warning' %}border-amber-200 bg-amber-50 text-amber-800
+            {% else %}border-slate-200 bg-white text-slate-700{% endif %}">
+            <span class="flex-1">{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% block extra_body %}{% endblock %}
+</body>
+</html>

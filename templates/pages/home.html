@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}Mrentals | {{ SITE_TAGLINE }}{% endblock %}
+
+{% block content %}
+<section class="border-b border-slate-200 bg-white">
+  <div class="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-14 lg:grid-cols-2 lg:py-20">
+    <div>
+      <span class="badge-verified">Verified landlord. Verified location.</span>
+      <h1 class="mt-4 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+        Find a house you can actually find, from a landlord you can actually trust.
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-slate-600">
+        Map pins fail for new buildings. "Trusted agent" is just a label. Mrentals fixes both:
+        every listing carries a full photo set and written directions, and every landlord
+        passes ID verification before their house goes live.
+      </p>
+
+      <form action="{% url 'listings:search' %}" method="get" class="mt-8 flex flex-col gap-2 sm:flex-row">
+        <label class="sr-only" for="hero-q">Search area or landmark</label>
+        <input id="hero-q" name="q" type="search" placeholder="Try &ldquo;Ruaka&rdquo; or &ldquo;Quickmart&rdquo;"
+               class="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30">
+        <button type="submit" class="btn-primary px-6 py-3">Search houses</button>
+      </form>
+
+      <dl class="mt-10 grid grid-cols-3 gap-4 border-t border-slate-100 pt-6">
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-slate-500">Live listings</dt>
+          <dd class="text-2xl font-bold text-slate-900">{{ stats.listings|intcomma }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-slate-500">Verified landlords</dt>
+          <dd class="text-2xl font-bold text-brand">{{ stats.verified_landlords|intcomma }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-slate-500">Tenant reviews</dt>
+          <dd class="text-2xl font-bold text-slate-900">{{ stats.reviews|intcomma }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="relative">
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-card">
+        <img src="{% static 'img/logo-icon.svg' %}" alt="" aria-hidden="true" class="h-14 w-auto text-ink" style="color:#000">
+        <h2 class="mt-5 text-lg font-semibold">What every listing must carry</h2>
+        <ul class="mt-4 space-y-3 text-sm text-slate-700">
+          <li class="flex gap-3"><span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand"></span>
+            Exterior, entrance, room and meter photos, not one flattering angle.</li>
+          <li class="flex gap-3"><span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand"></span>
+            A photo of the nearest landmark, so you know the place before you spend fare.</li>
+          <li class="flex gap-3"><span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand"></span>
+            Written directions the way people actually navigate.</li>
+          <li class="flex gap-3"><span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand"></span>
+            A landlord who submitted a national ID and proof they control the property.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="mx-auto w-full max-w-6xl px-4 py-12">
+  <div class="flex items-end justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold">Houses from verified landlords</h2>
+      <p class="mt-1 text-sm text-slate-600">Every one of these has a complete photo set and a verified owner.</p>
+    </div>
+    <a href="{% url 'listings:search' %}?verified_only=on" class="btn-outline hidden sm:inline-flex">See all</a>
+  </div>
+
+  <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for listing in featured %}{% include "listings/partials/card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if areas %}
+<section class="mx-auto w-full max-w-6xl px-4 pb-12">
+  <h2 class="text-2xl font-bold">Where people are renting</h2>
+  <div class="mt-5 flex flex-wrap gap-2">
+    {% for area in areas %}
+      <a href="{% url 'listings:search' %}?q={{ area.area|urlencode }}"
+         class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand">
+        {{ area.area }}, {{ area.county }} <span class="text-slate-400">{{ area.count }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="border-y border-slate-200 bg-white">
+  <div class="mx-auto grid w-full max-w-6xl gap-8 px-4 py-14 md:grid-cols-3">
+    <div>
+      <h3 class="text-lg font-semibold">Directions, not guesswork</h3>
+      <p class="mt-2 text-sm text-slate-600">
+        New estates rarely have accurate pins. Landlords write the route the way a boda rider
+        would say it, and back it with a photo of the landmark.
+      </p>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold">Verification, not a badge</h3>
+      <p class="mt-2 text-sm text-slate-600">
+        National ID plus a title deed, management letter or a video call. A human reviews every
+        submission before a listing can go live.
+      </p>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold">Reviews that go both ways</h3>
+      <p class="mt-2 text-sm text-slate-600">
+        Tenants rate landlords on repairs, deposits and honesty. Landlords rate tenants on
+        payment. Both are tied to a confirmed tenancy.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto w-full max-w-6xl px-4 py-14">
+  <div class="rounded-2xl bg-ink px-6 py-12 text-center sm:px-12">
+    <h2 class="text-3xl font-bold text-white">Own or manage a house?</h2>
+    <p class="mx-auto mt-3 max-w-xl text-slate-300">
+      Get verified once, then post as many houses as you like. Verified listings appear above
+      everything else in search.
+    </p>
+    <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href="{% url 'accounts:signup' %}" class="btn-primary px-6 py-3">Create a landlord account</a>
+      <a href="{% url 'pages:how_it_works' %}" class="btn px-6 py-3 border border-white/25 text-white hover:bg-white/10">See how verification works</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

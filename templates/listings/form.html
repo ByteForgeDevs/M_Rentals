@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}{% if is_create %}Post a house{% else %}Edit listing{% endif %} | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-4xl px-4 py-8">
+  <h1 class="text-3xl font-bold">{% if is_create %}Post a house{% else %}Edit listing{% endif %}</h1>
+  <p class="mt-1 text-slate-600">
+    Directions and a complete photo set are required. That is what makes a listing worth trusting.
+  </p>
+
+  {% if not user.is_verified_landlord %}
+    <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      You can save this listing now, but it cannot go live until your landlord verification is approved.
+      <a href="{% url 'verification:landlord' %}" class="font-semibold underline">Start verification</a>.
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="mt-8 space-y-8" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="card p-6">
+      <h2 class="text-lg font-semibold">The house</h2>
+      <div class="mt-5 space-y-4">
+        {% include "partials/field.html" with field=form.title %}
+        <div class="grid gap-4 sm:grid-cols-2">
+          {% include "partials/field.html" with field=form.property_type %}
+          {% include "partials/field.html" with field=form.available_from %}
+        </div>
+        {% include "partials/field.html" with field=form.description %}
+        <div class="grid gap-4 sm:grid-cols-4">
+          {% include "partials/field.html" with field=form.bedrooms %}
+          {% include "partials/field.html" with field=form.bathrooms %}
+          {% include "partials/field.html" with field=form.rent_amount %}
+          {% include "partials/field.html" with field=form.deposit_amount %}
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="text-lg font-semibold">Where it is</h2>
+      <p class="mt-1 text-sm text-slate-500">
+        Write the route the way you would tell a boda rider. This replaces the map pin.
+      </p>
+      <div class="mt-5 space-y-4">
+        <div class="grid gap-4 sm:grid-cols-2">
+          {% include "partials/field.html" with field=form.county %}
+          {% include "partials/field.html" with field=form.area %}
+        </div>
+        <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_180px]">
+          {% include "partials/field.html" with field=form.nearest_landmark %}
+          {% include "partials/field.html" with field=form.walking_minutes_to_landmark %}
+        </div>
+        {% include "partials/field.html" with field=form.landmark_description %}
+        <details class="rounded-lg border border-slate-200 p-4">
+          <summary class="cursor-pointer text-sm font-medium text-slate-700">Add GPS coordinates (optional)</summary>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {% include "partials/field.html" with field=form.latitude %}
+            {% include "partials/field.html" with field=form.longitude %}
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="text-lg font-semibold">Photos</h2>
+      <p class="mt-1 text-sm text-slate-500">
+        Required before publishing: building exterior, gate/entrance, room interior,
+        water/electricity meter, and the nearest landmark.
+      </p>
+
+      {% if listing and listing.photos.exists %}
+        <div class="mt-5 flex flex-wrap gap-3">
+          {% for photo in listing.photos.all %}
+            <figure class="w-28">
+              <img src="{{ photo.image.url }}" alt="" class="aspect-square w-28 rounded-lg object-cover">
+              <figcaption class="mt-1 text-[11px] text-slate-500">{{ photo.get_category_display }}</figcaption>
+            </figure>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {{ formset.management_form }}
+      {% if formset.non_form_errors %}
+        <div class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {% for error in formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="mt-5 space-y-4">
+        {% for photo_form in formset %}
+          <div class="rounded-lg border border-slate-200 p-4">
+            {{ photo_form.id }}
+            <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_200px_140px]">
+              {% include "partials/field.html" with field=photo_form.image %}
+              {% include "partials/field.html" with field=photo_form.category %}
+              {% include "partials/field.html" with field=photo_form.caption %}
+            </div>
+            {% if photo_form.instance.pk %}
+              <label class="mt-2 flex items-center gap-2 text-xs text-slate-500">
+                {{ photo_form.DELETE }} Remove this photo
+              </label>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="text-lg font-semibold">Extras</h2>
+      <div class="mt-5 space-y-4">
+        {% include "partials/field.html" with field=form.walkthrough_video_url %}
+        {% include "partials/field.html" with field=form.water_supply %}
+        <div class="grid gap-3 sm:grid-cols-3">
+          {% include "partials/field.html" with field=form.has_water_included %}
+          {% include "partials/field.html" with field=form.has_parking %}
+          {% include "partials/field.html" with field=form.has_security %}
+          {% include "partials/field.html" with field=form.has_borehole_backup %}
+          {% include "partials/field.html" with field=form.is_furnished %}
+          {% include "partials/field.html" with field=form.allows_pets %}
+        </div>
+      </div>
+    </section>
+
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <button type="submit" class="btn-primary px-6 py-3">Save listing</button>
+      {% if listing %}
+        <a href="{% url 'listings:manage' listing.slug %}" class="btn-outline px-6 py-3">Cancel</a>
+      {% else %}
+        <a href="{% url 'pages:dashboard' %}" class="btn-outline px-6 py-3">Cancel</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

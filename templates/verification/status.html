@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Verification | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-3xl px-4 py-8">
+  <h1 class="text-3xl font-bold">Verification centre</h1>
+  <p class="mt-1 text-slate-600">
+    A real person on our team checks every ID. This is the whole point of Mrentals.
+  </p>
+
+  <section class="card mt-8 p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Landlord verification</h2>
+        <p class="mt-1 text-sm text-slate-500">Required before any of your listings can go live.</p>
+      </div>
+      {% if landlord_verification %}
+        <span class="badge {% if landlord_verification.is_approved %}bg-brand-50 text-brand-700{% elif landlord_verification.is_rejected %}bg-red-50 text-red-700{% else %}bg-amber-50 text-amber-700{% endif %}">
+          {{ landlord_verification.get_status_display }}
+        </span>
+      {% else %}
+        <span class="badge-muted">Not started</span>
+      {% endif %}
+    </div>
+
+    {% if landlord_verification %}
+      <dl class="mt-5 space-y-1 text-sm text-slate-600">
+        <div><dt class="inline text-slate-500">Submitted:</dt> <dd class="inline">{{ landlord_verification.submitted_at|date:"j M Y, H:i" }}</dd></div>
+        {% if landlord_verification.reviewed_at %}
+          <div><dt class="inline text-slate-500">Reviewed:</dt> <dd class="inline">{{ landlord_verification.reviewed_at|date:"j M Y, H:i" }}</dd></div>
+        {% endif %}
+      </dl>
+      {% if landlord_verification.is_rejected and landlord_verification.reviewer_notes %}
+        <p class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {{ landlord_verification.reviewer_notes }}
+        </p>
+      {% endif %}
+    {% endif %}
+
+    {% if not landlord_verification or not landlord_verification.is_approved %}
+      <a href="{% url 'verification:landlord' %}" class="btn-primary mt-5">
+        {% if landlord_verification %}Resubmit documents{% else %}Start landlord verification{% endif %}
+      </a>
+    {% endif %}
+  </section>
+
+  <section class="card mt-6 p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Tenant verification</h2>
+        <p class="mt-1 text-sm text-slate-500">Optional, but verified tenants get taken seriously.</p>
+      </div>
+      {% if tenant_verification %}
+        <span class="badge {% if tenant_verification.is_approved %}bg-brand-50 text-brand-700{% elif tenant_verification.is_rejected %}bg-red-50 text-red-700{% else %}bg-amber-50 text-amber-700{% endif %}">
+          {{ tenant_verification.get_status_display }}
+        </span>
+      {% else %}
+        <span class="badge-muted">Not started</span>
+      {% endif %}
+    </div>
+
+    {% if tenant_verification.is_rejected and tenant_verification.reviewer_notes %}
+      <p class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        {{ tenant_verification.reviewer_notes }}
+      </p>
+    {% endif %}
+
+    {% if not tenant_verification or not tenant_verification.is_approved %}
+      <a href="{% url 'verification:tenant' %}" class="btn-outline mt-5">
+        {% if tenant_verification %}Resubmit documents{% else %}Start tenant verification{% endif %}
+      </a>
+    {% endif %}
+  </section>
+
+  <p class="mt-8 text-sm text-slate-500">
+    Your ID images are only visible to the Mrentals verification team. They never appear on your public profile.
+  </p>
+</div>
+{% endblock %}
