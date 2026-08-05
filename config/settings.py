@@ -90,6 +90,15 @@ DATABASES = {
     )
 }
 
+# Sharing a Postgres instance with another Django project would interleave the
+# two projects' django_migrations rows and collide on app labels. Confining
+# Mrentals to its own schema keeps the tables completely separate. The search
+# path deliberately excludes "public" so a table that only exists in the
+# neighbouring project can never be resolved by accident.
+DB_SCHEMA = os.getenv("DJANGO_DB_SCHEMA", "").strip()
+if DB_SCHEMA:
+    DATABASES["default"].setdefault("OPTIONS", {})["options"] = f"-c search_path={DB_SCHEMA}"
+
 AUTH_USER_MODEL = "accounts.User"
 
 AUTHENTICATION_BACKENDS = [
