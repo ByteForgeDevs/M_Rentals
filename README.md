@@ -104,7 +104,12 @@ All settings read from the environment, with development-friendly defaults:
 | `DJANGO_SECRET_KEY` | insecure dev key | Must be set in production. |
 | `DJANGO_DEBUG` | `True` | Set to `False` in production. |
 | `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma separated. |
-| `DATABASE_URL` | bundled SQLite | Set to a Postgres URL for production and uncomment `psycopg` in `requirements.txt`. |
+| `DATABASE_URL` | bundled SQLite | Set to a Postgres URL for production. |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | empty | Comma separated, needed for custom domains. |
+| `DJANGO_DB_SCHEMA` | unset | Confines every table to one Postgres schema. |
+| `DJANGO_MEDIA_ROOT` | `media/` | Point at a persistent volume in production. |
+| `DJANGO_SERVE_MEDIA_FILES` | `True` | Set to `False` once uploads move to object storage. |
+| `DJANGO_SECURE_SSL_REDIRECT` | `True` when `DEBUG=False` | Only disable behind a proxy that already forces HTTPS. |
 
 The domain rules live at the bottom of `config/settings.py`.
 `LISTING_REQUIRED_PHOTO_CATEGORIES` is the list a listing must satisfy before it
@@ -112,6 +117,43 @@ can be published.
 
 With `DEBUG=False`, static files are served by WhiteNoise with hashed
 filenames, so run `manage.py collectstatic` as part of deployment.
+
+## Deploying to Render
+
+`render.yaml` is a Render Blueprint that provisions the web service, and
+`build.sh` is the build step. Both assume the committed Tailwind CSS and htmx
+bundle, so the build stays pure Python and needs no Node toolchain.
+
+1. In Render, create a new Blueprint pointed at this repository.
+2. Set `DATABASE_URL` to the Postgres instance's **internal** connection string.
+3. Deploy. The build installs dependencies, runs `collectstatic`, then `migrate`.
+
+If the Postgres instance is shared with another Django project, set
+`DJANGO_DB_SCHEMA` to a name of its own. Two Django projects in one schema would
+write to the same `django_migrations` table and collide on app labels such as
+`accounts`. The search path deliberately omits `public`, so a table belonging to
+the neighbouring project can never be resolved by mistake. Create the schema
+once with `CREATE SCHEMA mrentals` before the first deploy.
+
+`RENDER_EXTERNAL_HOSTNAME` is injected by Render and is added to
+`ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` automatically, so the default
+`onrender.com` URL works without extra configuration.
+
+### Uploads and the ephemeral filesystem
+
+Render replaces the container filesystem on every deploy, and free instances
+cannot mount a disk. Listing photos and ID documents are user uploads, so they
+do not survive a deploy. Because photos are mandatory for publication, the build
+reseeds the demo data when `SEED_DEMO_ON_DEPLOY` is `true`, which regenerates
+the demo listings and their images.
+
+To keep real uploads, attach a persistent disk on a paid instance type, set
+`DJANGO_MEDIA_ROOT` to its mount path, and set `SEED_DEMO_ON_DEPLOY` to `false`.
+The longer term fix is object storage such as S3, at which point
+`DJANGO_SERVE_MEDIA_FILES` can be set to `False`.
+
+To load the demo data manually, open a shell on the service and run
+`python manage.py seed_demo --flush`.
 
 ## Brand
 

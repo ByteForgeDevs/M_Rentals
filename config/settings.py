@@ -27,6 +27,13 @@ DEBUG = env_bool("DJANGO_DEBUG", True)
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0,testserver")
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
+# Render injects the service's public hostname. Trusting it automatically means
+# a deploy works without hand-editing host settings every time the URL changes.
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -83,6 +90,15 @@ DATABASES = {
     )
 }
 
+# Sharing a Postgres instance with another Django project would interleave the
+# two projects' django_migrations rows and collide on app labels. Confining
+# Mrentals to its own schema keeps the tables completely separate. The search
+# path deliberately excludes "public" so a table that only exists in the
+# neighbouring project can never be resolved by accident.
+DB_SCHEMA = os.getenv("DJANGO_DB_SCHEMA", "").strip()
+if DB_SCHEMA:
+    DATABASES["default"].setdefault("OPTIONS", {})["options"] = f"-c search_path={DB_SCHEMA}"
+
 AUTH_USER_MODEL = "accounts.User"
 
 AUTHENTICATION_BACKENDS = [
@@ -111,7 +127,11 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# On Render this points at a mounted persistent disk. The default keeps uploads
+# next to the project for local development.
+MEDIA_ROOT = Path(os.getenv("DJANGO_MEDIA_ROOT", BASE_DIR / "media"))
+# Set to false once uploads move to object storage that serves its own URLs.
+SERVE_MEDIA_FILES = env_bool("DJANGO_SERVE_MEDIA_FILES", True)
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
@@ -140,6 +160,10 @@ LISTING_IMAGE_MAX_BYTES = 8 * 1024 * 1024
 VERIFICATION_DOC_MAX_BYTES = 8 * 1024 * 1024
 
 if not DEBUG:
+    # Render terminates TLS at its proxy, so Django only sees plain HTTP on the
+    # inside. Without this header it never believes a request is secure and the
+    # SSL redirect below turns into an infinite loop.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
