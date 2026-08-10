@@ -1,31 +1,42 @@
 /** @type {import('tailwindcss').Config} */
+
+// Neutral, canvas, surface and brand are declared as channel triplets in
+// `assets/css/input.css` and read back here through `rgb(var(--x) / <alpha-value>)`.
+// That indirection is what makes dark mode a variable swap on <html> rather than
+// a `dark:` variant on several hundred utilities across the templates.
+const withVar = (name) => `rgb(var(${name}) / <alpha-value>)`;
+
+const ramp = (prefix, shades) =>
+  Object.fromEntries(shades.map((shade) => [shade, withVar(`--${prefix}-${shade}`)]));
+
 module.exports = {
+  darkMode: "class",
   content: ["./templates/**/*.html", "./apps/**/*.py", "./apps/**/*.html"],
   theme: {
     extend: {
       colors: {
         // Brand guidelines v1.0: the mark stays black, green is the accent.
+        // The tint end of the ramp doubles as a surface, so it has to invert in
+        // dark mode or every badge turns into a bright patch.
         brand: {
-          DEFAULT: "#1B9D80",
-          50: "#EEFAF6",
-          100: "#D2F2E9",
-          200: "#A6E5D4",
-          300: "#6FD3BA",
-          400: "#3BB89B",
-          500: "#1B9D80",
-          600: "#157E67",
-          700: "#12634F",
-          800: "#0F4E40",
-          900: "#0B3B30",
+          DEFAULT: withVar("--brand-500"),
+          ...ramp("brand", [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]),
         },
-        ink: "#000000",
-        // Warm neutral for large surfaces. Pure slate reads cold behind listing
-        // photos, which sit on these surfaces on every page.
-        canvas: {
-          50: "#FAFAF9",
-          100: "#F5F5F3",
-          200: "#E9E9E5",
-        },
+        slate: ramp("slate", [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]),
+        // Status colours follow the same rule as the brand ramp: the tint end is
+        // an alert background and the dark end is its text, so both invert.
+        red: ramp("red", [50, 200, 400, 600, 700, 800]),
+        amber: ramp("amber", [50, 200, 400, 700, 800]),
+        canvas: ramp("canvas", [50, 100, 200]),
+        // The background of a card or panel. Was a literal white before dark mode.
+        surface: withVar("--surface"),
+        // Deliberately dark in both themes. Avatars, the dark CTA blocks and the
+        // lightbox are dark surfaces by design, not by theme.
+        ink: withVar("--ink"),
+        // Non-inverting pair for chrome that sits on a photograph. A photo is a
+        // photo in either theme, so its badges keep a light chip and dark text.
+        paper: "#FFFFFF",
+        carbon: "#1E293B",
       },
       fontFamily: {
         sans: [
@@ -53,11 +64,12 @@ module.exports = {
         "5xl": "2.5rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px -12px rgba(15, 23, 42, 0.18)",
-        lift: "0 2px 4px rgba(15, 23, 42, 0.06), 0 18px 40px -18px rgba(15, 23, 42, 0.28)",
-        panel: "0 24px 60px -24px rgba(15, 23, 42, 0.35)",
+        card: "0 1px 2px rgb(var(--shadow) / 0.06), 0 8px 24px -12px rgb(var(--shadow) / 0.18)",
+        lift: "0 2px 4px rgb(var(--shadow) / 0.06), 0 18px 40px -18px rgb(var(--shadow) / 0.28)",
+        panel: "0 24px 60px -24px rgb(var(--shadow) / 0.35)",
         // A tall, soft shadow reads as real elevation rather than a grey outline.
-        float: "0 4px 8px -4px rgba(15, 23, 42, 0.08), 0 32px 64px -24px rgba(15, 23, 42, 0.34)",
+        float:
+          "0 4px 8px -4px rgb(var(--shadow) / 0.08), 0 32px 64px -24px rgb(var(--shadow) / 0.34)",
         // Green light under the primary button ties it to the brand.
         glow: "0 8px 24px -8px rgba(27, 157, 128, 0.45)",
         "glow-lg": "0 14px 40px -10px rgba(27, 157, 128, 0.5)",
@@ -75,15 +87,15 @@ module.exports = {
       backgroundImage: {
         // Two offset radial washes read as depth without needing an image.
         "mesh-brand":
-          "radial-gradient(60% 60% at 12% 0%, rgba(27,157,128,0.13) 0%, rgba(27,157,128,0) 100%), radial-gradient(50% 55% at 92% 18%, rgba(59,184,155,0.16) 0%, rgba(59,184,155,0) 100%)",
+          "radial-gradient(60% 60% at 12% 0%, rgb(var(--mesh) / var(--mesh-a1)) 0%, rgb(var(--mesh) / 0) 100%), radial-gradient(50% 55% at 92% 18%, rgb(var(--mesh-2) / var(--mesh-a2)) 0%, rgb(var(--mesh-2) / 0) 100%)",
         "mesh-dark":
           "radial-gradient(55% 55% at 85% 0%, rgba(27,157,128,0.32) 0%, rgba(27,157,128,0) 100%), radial-gradient(45% 60% at 8% 100%, rgba(27,157,128,0.18) 0%, rgba(27,157,128,0) 100%)",
         "grid-slate":
-          "linear-gradient(to right, rgba(15,23,42,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.045) 1px, transparent 1px)",
+          "linear-gradient(to right, rgb(var(--grid) / var(--grid-a)) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--grid) / var(--grid-a)) 1px, transparent 1px)",
         "fade-up-white":
-          "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
+          "linear-gradient(to bottom, rgb(var(--surface) / 0) 0%, rgb(var(--surface) / 1) 100%)",
         shimmer:
-          "linear-gradient(90deg, rgba(226,232,240,0) 0%, rgba(255,255,255,0.85) 50%, rgba(226,232,240,0) 100%)",
+          "linear-gradient(90deg, rgb(var(--slate-200) / 0) 0%, rgb(var(--slate-50) / 0.85) 50%, rgb(var(--slate-200) / 0) 100%)",
       },
       backgroundSize: {
         grid: "44px 44px",

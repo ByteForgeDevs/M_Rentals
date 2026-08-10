@@ -9,11 +9,23 @@
   <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% comment %}
-  Sets the flag that arms the scroll reveal styles. It runs inline and before
-  first paint so revealable content never flashes in and then hides itself. A
-  browser with JavaScript off never gets the class, so it never hides anything.
+  Sets the flag that arms the scroll reveal styles, and resolves the colour
+  theme. Both run inline and before first paint: the reveal flag so revealable
+  content never flashes in and then hides itself, and the theme so a returning
+  dark mode reader never gets a white page flashed at them first. A browser
+  with JavaScript off gets neither class, so it keeps the light theme and
+  hides nothing.
   {% endcomment %}
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    document.documentElement.classList.add("js");
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem("theme"); } catch (e) {}
+      var dark = stored === "dark" ||
+        (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.classList.toggle("dark", dark);
+    })();
+  </script>
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
   <script src="{% static 'js/motion.js' %}" defer></script>
   {% block extra_head %}{% endblock %}
@@ -31,7 +43,7 @@
             {% if message.tags == 'success' %}border-brand-200 bg-brand-50 text-brand-800
             {% elif message.tags == 'error' %}border-red-200 bg-red-50 text-red-800
             {% elif message.tags == 'warning' %}border-amber-200 bg-amber-50 text-amber-800
-            {% else %}border-slate-200 bg-white text-slate-700{% endif %}">
+            {% else %}border-slate-200 bg-surface text-slate-700{% endif %}">
             <span class="mt-0.5 shrink-0">
               {% if message.tags == 'success' %}{% icon "check" "h-4 w-4" %}
               {% elif message.tags == 'error' %}{% icon "alert" "h-4 w-4" %}

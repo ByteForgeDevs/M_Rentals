@@ -10,13 +10,14 @@ sentence set in display type needs the room to stay on three lines. The washes
 behind it drift slowly, which gives the surface life without competing with
 the copy.
 {% endcomment %}
-<section class="relative overflow-hidden border-b border-slate-200 bg-white">
-  <div class="pointer-events-none absolute inset-0 bg-mesh-brand"></div>
-  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent)]"></div>
-  <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 animate-float rounded-full bg-brand-200/40 blur-3xl"></div>
-  <div class="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 animate-float-slow rounded-full bg-brand-100/60 blur-3xl"></div>
+<section class="photo-band scrim-light border-b border-slate-200">
+  {% backdrop "estate-day" loading="eager" %}
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-mesh-brand"></div>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-grid-slate bg-grid [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent)]"></div>
+  <div class="pointer-events-none absolute -right-24 -top-24 -z-10 h-96 w-96 animate-float rounded-full bg-brand-200/40 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-32 -left-24 -z-10 h-80 w-80 animate-float-slow rounded-full bg-brand-100/60 blur-3xl"></div>
 
-  <div class="shell relative grid items-center gap-12 py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-20">
+  <div class="shell grid items-center gap-12 py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-20">
     <div>
       <span class="badge-verified animate-rise-in shadow-sm">
         <span class="relative flex h-2 w-2">
@@ -44,7 +45,7 @@ the copy.
       </p>
 
       <form action="{% url 'listings:search' %}" method="get"
-            class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white/90 sm:p-2 sm:shadow-float sm:backdrop-blur
+            class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-surface/90 sm:p-2 sm:shadow-float sm:backdrop-blur
                    sm:transition-shadow sm:duration-300 sm:focus-within:shadow-glow-lg">
         <label class="sr-only" for="hero-q">Search area or landmark</label>
         <div class="relative flex-1">
@@ -52,7 +53,7 @@ the copy.
             {% icon "search" "h-5 w-5" %}
           </span>
           <input id="hero-q" name="q" type="search" placeholder="Try Ruaka, Quickmart or Nyali"
-                 class="w-full rounded-xl border-slate-300 py-3 pl-11 pr-4 text-slate-900 shadow-sm transition
+                 class="w-full rounded-xl border-slate-300 bg-surface py-3 pl-11 pr-4 text-slate-900 shadow-sm transition
                         placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/30
                         sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus:ring-0">
         </div>
@@ -154,7 +155,7 @@ the copy.
 </section>
 {% endif %}
 
-<section class="photo-band scrim-canvas mt-12 border-y border-slate-200 bg-white">
+<section class="photo-band scrim-canvas mt-12 border-y border-slate-200 bg-surface">
   {% backdrop "facade-grid" %}
   <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent"></div>
   <div class="pointer-events-none absolute inset-0 -z-10 bg-grid-slate bg-grid [mask-image:radial-gradient(50%_50%_at_50%_50%,black,transparent)]"></div>
@@ -166,7 +167,7 @@ the copy.
     </div>
 
     <div class="mt-9 grid gap-5 md:grid-cols-3" data-reveal-group>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-surface/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-surface hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "map-pin" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Directions, not guesswork</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
@@ -174,7 +175,7 @@ the copy.
           would say it, and back it with a photo of the landmark.
         </p>
       </div>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-surface/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-surface hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "shield-check" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Verification, not a badge</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
@@ -182,7 +183,7 @@ the copy.
           submission before a listing can go live.
         </p>
       </div>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-surface/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-surface hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "star" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Reviews that go both ways</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">

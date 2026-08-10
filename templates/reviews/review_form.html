@@ -30,7 +30,7 @@
         <div class="mt-3 {% if field.field.widget.input_type == 'radio' %}flex flex-wrap gap-2{% endif %}">
           {% if field.field.widget.input_type == 'radio' %}
             {% for choice in field %}
-              <label class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm transition hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:font-semibold has-[:checked]:text-brand-800 has-[:checked]:ring-1 has-[:checked]:ring-brand">
+              <label class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-surface px-3.5 py-2 text-sm transition hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:font-semibold has-[:checked]:text-brand-800 has-[:checked]:ring-1 has-[:checked]:ring-brand">
                 {{ choice.tag }}<span>{{ choice.choice_label }}</span>
               </label>
             {% endfor %}

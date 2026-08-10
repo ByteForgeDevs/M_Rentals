@@ -206,7 +206,7 @@
         <p class="mt-4 text-xs text-slate-400">{{ listing.view_count }} view{{ listing.view_count|pluralize }}</p>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+      <div class="rounded-2xl border border-slate-200 bg-surface p-5">
         <h2 class="flex items-center gap-2 text-sm font-semibold">
           {% icon "shield-check" "h-4 w-4 text-brand-600" %}Before you pay anything
         </h2>
@@ -233,7 +233,7 @@
 Mobile action bar. On a phone the contact panel is far below the fold, so the
 price and the single most useful action stay in reach at all times.
 {% endcomment %}
-<div class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_-8px_rgba(15,23,42,0.25)] backdrop-blur lg:hidden">
+<div class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-surface/95 px-4 py-3 shadow-[0_-4px_20px_-8px_rgba(15,23,42,0.25)] backdrop-blur lg:hidden">
   <div class="flex items-center gap-3">
     <div class="min-w-0 flex-1">
       <p class="truncate text-base font-bold text-slate-900">KES {{ listing.rent_amount|floatformat:0|intcomma }}<span class="text-xs font-medium text-slate-500">/mo</span></p>

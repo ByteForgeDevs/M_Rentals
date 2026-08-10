@@ -1,40 +1,52 @@
 {% load static ui %}
 {% with ns=request.resolver_match.namespace url_name=request.resolver_match.url_name %}
 <header data-site-header
-        class="sticky top-0 z-40 border-b border-transparent bg-white/80 backdrop-blur-md
+        class="sticky top-0 z-40 border-b border-transparent bg-surface/70 backdrop-blur-xl
                transition-all duration-300 ease-out-soft
-               [&.is-scrolled]:border-slate-200 [&.is-scrolled]:bg-white/95 [&.is-scrolled]:shadow-card">
-  <nav class="shell flex items-center gap-3 py-3" aria-label="Main">
+               [&.is-scrolled]:border-slate-200 [&.is-scrolled]:bg-surface/90 [&.is-scrolled]:shadow-card">
+  <nav class="shell flex items-center gap-3 py-2.5" aria-label="Main">
     <a href="{% url 'pages:home' %}" class="flex shrink-0 items-center rounded-lg transition-transform duration-200 ease-spring hover:scale-105" aria-label="Mrentals home">
-      <img src="{% static 'img/logo-lockup.svg' %}" alt="Mrentals" class="h-10 w-auto" width="122" height="98">
+      {# The mark is black, so the dark theme gets the approved reversed lockup. #}
+      <img src="{% static 'img/logo-lockup.svg' %}" alt="Mrentals" class="h-10 w-auto dark:hidden" width="122" height="98">
+      <img src="{% static 'img/logo-reversed.svg' %}" alt="Mrentals" class="hidden h-10 w-auto dark:block" width="122" height="98">
     </a>
 
-    <div class="ml-auto hidden items-center gap-1 md:flex">
-      <a href="{% url 'listings:search' %}"
-         class="btn-ghost {% if ns == 'listings' and url_name == 'search' %}bg-slate-100 text-slate-900{% endif %}"
-         {% if ns == 'listings' and url_name == 'search' %}aria-current="page"{% endif %}>Find a house</a>
-      <a href="{% url 'pages:how_it_works' %}"
-         class="btn-ghost {% if url_name == 'how_it_works' %}bg-slate-100 text-slate-900{% endif %}"
-         {% if url_name == 'how_it_works' %}aria-current="page"{% endif %}>How it works</a>
+    <div class="ml-auto hidden items-center gap-2 md:flex">
+      <div class="nav-group">
+        <a href="{% url 'listings:search' %}"
+           class="nav-link {% if ns == 'listings' and url_name == 'search' %}nav-link-active{% endif %}"
+           {% if ns == 'listings' and url_name == 'search' %}aria-current="page"{% endif %}>Find a house</a>
+        <a href="{% url 'pages:how_it_works' %}"
+           class="nav-link {% if url_name == 'how_it_works' %}nav-link-active{% endif %}"
+           {% if url_name == 'how_it_works' %}aria-current="page"{% endif %}>How it works</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'pages:dashboard' %}"
+             class="nav-link {% if url_name == 'dashboard' %}nav-link-active{% endif %}"
+             {% if url_name == 'dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+        {% endif %}
+      </div>
+
+      <button type="button" data-theme-toggle class="icon-btn" aria-pressed="false" aria-label="Switch to dark mode">
+        <span class="dark:hidden">{% icon "moon" "h-5 w-5" %}</span>
+        <span class="hidden dark:block">{% icon "sun" "h-5 w-5" %}</span>
+      </button>
 
       {% if user.is_authenticated %}
         {% if user.is_landlord %}
           <a href="{% url 'listings:create' %}" class="btn-outline">{% icon "home" "h-4 w-4" %}Post a house</a>
         {% else %}
-          <a href="{% url 'listings:saved' %}"
-             class="btn-ghost {% if url_name == 'saved' %}bg-slate-100 text-slate-900{% endif %}">{% icon "heart" "h-4 w-4" %}Saved</a>
+          <a href="{% url 'listings:saved' %}" class="btn-outline">{% icon "heart" "h-4 w-4" %}Saved</a>
         {% endif %}
-        <a href="{% url 'pages:dashboard' %}"
-           class="btn-ghost {% if url_name == 'dashboard' %}bg-slate-100 text-slate-900{% endif %}">Dashboard</a>
 
         {# A disclosure rather than a hover menu, so it works on touch too. #}
-        <details class="group relative ml-1">
-          <summary class="flex cursor-pointer list-none items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100"
+        <details class="group relative">
+          <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-slate-100"
                    aria-label="Account menu">
-            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">{{ user.display_initials }}</span>
+            <span class="avatar h-8 w-8">{{ user.display_initials }}</span>
             <span class="hidden max-w-[9rem] truncate text-sm font-medium text-slate-700 lg:inline">{{ user.full_name }}</span>
+            {% icon "chevron-down" "h-4 w-4 text-slate-400 transition-transform group-open:rotate-180" %}
           </summary>
-          <div class="absolute right-0 z-50 mt-2 w-60 origin-top-right animate-rise-in rounded-xl border border-slate-200 bg-white p-2 shadow-panel">
+          <div class="absolute right-0 z-50 mt-2 w-60 origin-top-right animate-rise-in rounded-xl border border-slate-200 bg-surface p-2 shadow-panel">
             <p class="truncate px-3 pb-2 pt-1 text-xs text-slate-500">{{ user.email|default:user.phone }}</p>
             <a href="{% url 'accounts:profile' %}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100">{% icon "users" "h-4 w-4 text-slate-400" %}Profile</a>
             <a href="{% url 'reviews:tenancies' %}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100">{% icon "star" "h-4 w-4 text-slate-400" %}Tenancies and reviews</a>
@@ -52,15 +64,21 @@
       {% endif %}
     </div>
 
-    <details class="relative ml-auto md:hidden [&[open]_.menu-open]:hidden [&[open]_.menu-close]:block">
+    <div class="ml-auto flex items-center gap-1 md:hidden">
+      <button type="button" data-theme-toggle class="icon-btn" aria-pressed="false" aria-label="Switch to dark mode">
+        <span class="dark:hidden">{% icon "moon" "h-5 w-5" %}</span>
+        <span class="hidden dark:block">{% icon "sun" "h-5 w-5" %}</span>
+      </button>
+
+      <details class="relative [&[open]_.menu-open]:hidden [&[open]_.menu-close]:block">
       <summary class="btn-outline btn-touch list-none cursor-pointer px-3" aria-label="Open menu">
         <span class="menu-open">{% icon "menu" "h-5 w-5" %}</span>
         <span class="menu-close hidden">{% icon "close" "h-5 w-5" %}</span>
       </summary>
-      <div class="absolute right-0 z-50 mt-2 w-[min(17rem,calc(100vw-2rem))] animate-rise-in rounded-xl border border-slate-200 bg-white p-2 shadow-panel">
+      <div class="absolute right-0 z-50 mt-2 w-[min(17rem,calc(100vw-2rem))] animate-rise-in rounded-xl border border-slate-200 bg-surface p-2 shadow-panel">
         {% if user.is_authenticated %}
           <div class="flex items-center gap-2.5 border-b border-slate-100 px-3 pb-3 pt-2">
-            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">{{ user.display_initials }}</span>
+            <span class="avatar h-9 w-9">{{ user.display_initials }}</span>
             <span class="min-w-0">
               <span class="block truncate text-sm font-semibold text-slate-900">{{ user.full_name }}</span>
               <span class="block truncate text-xs text-slate-500">{{ user.get_role_display }}</span>
@@ -89,6 +107,7 @@
         {% endif %}
       </div>
     </details>
+    </div>
   </nav>
 </header>
 {% endwith %}

@@ -11,8 +11,8 @@ photos are never locked behind a script.
 {% endcomment %}
 
 {% if gallery_photos %}
-<div id="gallery" class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
-  <div class="relative bg-slate-900">
+<div id="gallery" class="overflow-hidden rounded-2xl border border-slate-200 bg-surface shadow-card">
+  <div class="relative bg-ink">
     <a href="{{ gallery_photos.0.image.url }}" data-gallery-open target="_blank" rel="noopener"
        class="block aspect-[4/3] w-full sm:aspect-[16/10]">
       <img data-gallery-stage src="{{ gallery_photos.0.image.url }}"
@@ -22,11 +22,11 @@ photos are never locked behind a script.
 
     {% if gallery_photos|length > 1 %}
       <button type="button" data-gallery-step="-1" aria-label="Previous photo"
-              class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-800 shadow-md backdrop-blur transition hover:bg-white">
+              class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-carbon shadow-md backdrop-blur transition hover:bg-paper">
         {% icon "arrow-left" "h-5 w-5" %}
       </button>
       <button type="button" data-gallery-step="1" aria-label="Next photo"
-              class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-800 shadow-md backdrop-blur transition hover:bg-white">
+              class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-carbon shadow-md backdrop-blur transition hover:bg-paper">
         {% icon "arrow-right" "h-5 w-5" %}
       </button>
     {% endif %}
@@ -36,7 +36,7 @@ photos are never locked behind a script.
       <div class="flex shrink-0 items-center gap-2">
         <span data-gallery-counter class="badge bg-black/55 text-white backdrop-blur"></span>
         <button type="button" data-gallery-open
-                class="pointer-events-auto badge bg-white/95 text-slate-800 shadow-sm backdrop-blur transition hover:bg-white">
+                class="pointer-events-auto badge bg-paper/95 text-carbon shadow-sm backdrop-blur transition hover:bg-paper">
           {% icon "expand" "h-3.5 w-3.5" %}View
         </button>
       </div>
@@ -66,20 +66,20 @@ photos are never locked behind a script.
 
 <dialog id="gallery-lightbox"
         class="w-[min(96vw,72rem)] rounded-2xl bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm">
-  <div class="relative overflow-hidden rounded-2xl bg-slate-950">
+  <div class="relative overflow-hidden rounded-2xl bg-ink">
     <img data-lightbox-image src="" alt="" class="max-h-[80vh] w-full object-contain">
 
     <form method="dialog" class="absolute right-3 top-3">
-      <button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white"
+      <button class="flex h-10 w-10 items-center justify-center rounded-full bg-paper/90 text-carbon shadow-md transition hover:bg-paper"
               aria-label="Close photo viewer">{% icon "close" "h-5 w-5" %}</button>
     </form>
 
     <button type="button" data-lightbox-step="-1" aria-label="Previous photo"
-            class="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white">
+            class="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-carbon shadow-md transition hover:bg-paper">
       {% icon "arrow-left" "h-5 w-5" %}
     </button>
     <button type="button" data-lightbox-step="1" aria-label="Next photo"
-            class="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white">
+            class="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-carbon shadow-md transition hover:bg-paper">
       {% icon "arrow-right" "h-5 w-5" %}
     </button>
 
