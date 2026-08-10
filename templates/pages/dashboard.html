@@ -1,74 +1,101 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize ui %}
+
 {% block title %}Dashboard | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-6xl px-4 py-8">
+<div class="shell py-8">
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-bold">Habari, {{ user.full_name|truncatewords:1 }}</h1>
-      <p class="mt-1 text-slate-600">Using Mrentals as a {{ user.get_role_display|lower }}.</p>
+      <p class="eyebrow">Using Mrentals as a {{ user.get_role_display|lower }}</p>
+      <h1 class="mt-1.5 text-display-sm">Habari, {{ user.full_name.split.0 }}</h1>
     </div>
     {% if user.is_landlord %}
-      <a href="{% url 'listings:create' %}" class="btn-primary px-5 py-2.5">Post a house</a>
+      <a href="{% url 'listings:create' %}" class="btn-primary btn-lg btn-touch">{% icon "home" "h-4 w-4" %}Post a house</a>
     {% else %}
-      <a href="{% url 'listings:search' %}" class="btn-primary px-5 py-2.5">Find a house</a>
+      <a href="{% url 'listings:search' %}" class="btn-primary btn-lg btn-touch">{% icon "search" "h-4 w-4" %}Find a house</a>
     {% endif %}
   </div>
 
   {% if verification %}
     {% if verification.is_pending %}
-      <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-        Your verification is with our review team. We usually get through them within 48 hours.
+      <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800">
+        {% icon "clock" "h-4 w-4 mt-0.5 shrink-0" %}
+        <span>Your verification is with our review team. We usually get through them within 48 hours.</span>
       </div>
     {% elif verification.is_rejected %}
-      <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-        Your verification was rejected. {{ verification.reviewer_notes }}
-        <a href="{% url 'verification:status' %}" class="font-semibold underline">Resubmit</a>.
+      <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-800">
+        {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+        <span>
+          Your verification was rejected. {{ verification.reviewer_notes }}
+          <a href="{% url 'verification:status' %}" class="font-semibold underline">Resubmit</a>.
+        </span>
       </div>
     {% endif %}
   {% else %}
-    <div class="mt-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-      {% if user.is_landlord %}
-        You are not verified yet, so your listings cannot go live.
-        <a href="{% url 'verification:landlord' %}" class="font-semibold text-brand underline">Verify your identity</a>.
-      {% else %}
-        Verified tenants get replies faster.
-        <a href="{% url 'verification:tenant' %}" class="font-semibold text-brand underline">Verify your identity</a>.
-      {% endif %}
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50 px-5 py-4">
+      <div class="flex items-start gap-2.5 text-sm text-brand-800">
+        {% icon "shield-check" "h-4.5 w-4.5 mt-px shrink-0" %}
+        <span>
+          {% if user.is_landlord %}
+            You are not verified yet, so your listings cannot go live.
+          {% else %}
+            Verified tenants get replies faster.
+          {% endif %}
+        </span>
+      </div>
+      <a href="{% if user.is_landlord %}{% url 'verification:landlord' %}{% else %}{% url 'verification:tenant' %}{% endif %}"
+         class="btn-primary btn-touch shrink-0">Verify your identity</a>
     </div>
   {% endif %}
 
   {% if user.is_landlord %}
     <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <div class="card p-5"><dt class="text-sm text-slate-500">Live</dt><dd class="mt-1 text-3xl font-bold">{{ listing_counts.published }}</dd></div>
-      <div class="card p-5"><dt class="text-sm text-slate-500">Drafts</dt><dd class="mt-1 text-3xl font-bold">{{ listing_counts.draft }}</dd></div>
-      <div class="card p-5"><dt class="text-sm text-slate-500">Total views</dt><dd class="mt-1 text-3xl font-bold">{{ total_views|intcomma }}</dd></div>
       <div class="card p-5">
-        <dt class="text-sm text-slate-500">Your rating</dt>
-        <dd class="mt-1 text-3xl font-bold">{% if rating.count %}{{ rating.avg|floatformat:1 }}{% else %}<span class="text-lg text-slate-400">Not rated</span>{% endif %}</dd>
-        <dd class="text-xs text-slate-500">{{ rating.count }} review{{ rating.count|pluralize }}</dd>
+        <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "bolt" "h-4 w-4 text-brand-500" %}Live</dt>
+        <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ listing_counts.published }}</dd>
+      </div>
+      <div class="card p-5">
+        <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "info" "h-4 w-4 text-slate-400" %}Drafts</dt>
+        <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ listing_counts.draft }}</dd>
+      </div>
+      <div class="card p-5">
+        <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "users" "h-4 w-4 text-slate-400" %}Total views</dt>
+        <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ total_views|intcomma }}</dd>
+      </div>
+      <div class="card p-5">
+        <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "star" "h-4 w-4 text-amber-400" %}Your rating</dt>
+        <dd class="mt-1.5 text-3xl font-bold tracking-tight">{% if rating.count %}{{ rating.avg|floatformat:1 }}{% else %}<span class="text-lg font-medium text-slate-400">Not rated</span>{% endif %}</dd>
+        <dd class="mt-0.5 text-xs text-slate-500">{{ rating.count }} review{{ rating.count|pluralize }}</dd>
       </div>
     </dl>
 
     <section class="mt-10">
-      <h2 class="text-xl font-bold">Your listings</h2>
+      <h2 class="text-xl font-bold tracking-tight">Your listings</h2>
       {% if listings %}
         <ul class="mt-4 space-y-3">
           {% for listing in listings %}
-            <li class="card flex flex-wrap items-center gap-4 p-4">
+            <li class="card flex flex-wrap items-center gap-4 p-4 transition hover:shadow-lift">
               {% if listing.cover_photo %}
-                <img src="{{ listing.cover_photo.image.url }}" alt="" class="h-20 w-28 shrink-0 rounded-lg object-cover">
+                <img src="{{ listing.cover_photo.image.url }}" alt="" loading="lazy" class="h-20 w-28 shrink-0 rounded-lg object-cover">
               {% else %}
-                <div class="flex h-20 w-28 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400">No photo</div>
+                <div class="flex h-20 w-28 shrink-0 flex-col items-center justify-center gap-1 rounded-lg bg-canvas-100 text-xs text-slate-400">
+                  {% icon "camera" "h-5 w-5" %}No photo
+                </div>
               {% endif %}
               <div class="min-w-0 flex-1">
                 <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold hover:text-brand">{{ listing.title }}</a>
-                <p class="mt-1 text-sm text-slate-500">
-                  {{ listing.location_summary }} · KES {{ listing.rent_amount|floatformat:0|intcomma }}/mo · {{ listing.view_count }} view{{ listing.view_count|pluralize }}
+                <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
+                  <span>{{ listing.location_summary }}</span>
+                  <span class="text-slate-300">/</span>
+                  <span>KES {{ listing.rent_amount|floatformat:0|intcomma }}/mo</span>
+                  <span class="text-slate-300">/</span>
+                  <span>{{ listing.view_count }} view{{ listing.view_count|pluralize }}</span>
                 </p>
                 {% if listing.missing_photo_labels %}
-                  <p class="mt-1 text-xs text-amber-700">Missing photos: {{ listing.missing_photo_labels|join:", " }}</p>
+                  <p class="mt-1.5 flex items-center gap-1 text-xs font-medium text-amber-700">
+                    {% icon "alert" "h-3.5 w-3.5" "2" %}Missing photos: {{ listing.missing_photo_labels|join:", " }}
+                  </p>
                 {% endif %}
               </div>
               <span class="badge {% if listing.is_published %}bg-brand-50 text-brand-700{% else %}bg-slate-100 text-slate-600{% endif %}">
@@ -78,31 +105,38 @@
           {% endfor %}
         </ul>
       {% else %}
-        <div class="card mt-4 p-8 text-center">
-          <p class="text-sm text-slate-600">No listings yet. Post your first house. It takes about five minutes.</p>
-          <a href="{% url 'listings:create' %}" class="btn-primary mt-4">Post a house</a>
+        <div class="card mt-4 px-6 py-12 text-center">
+          <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "home" "h-7 w-7" %}</span>
+          <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">No listings yet. Post your first house. It takes about five minutes.</p>
+          <a href="{% url 'listings:create' %}" class="btn-primary btn-touch mt-5">Post a house</a>
         </div>
       {% endif %}
     </section>
 
   {% else %}
     <section class="mt-10">
-      <h2 class="text-xl font-bold">Saved houses</h2>
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-xl font-bold tracking-tight">Saved houses</h2>
+        {% if saved %}<a href="{% url 'listings:saved' %}" class="link-quiet text-sm">See all saved</a>{% endif %}
+      </div>
       {% if saved %}
         <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {% for entry in saved %}
             {% include "listings/partials/card.html" with listing=entry.listing %}
           {% endfor %}
         </div>
-        <a href="{% url 'listings:saved' %}" class="btn-ghost mt-4">See all saved</a>
       {% else %}
-        <p class="mt-4 text-sm text-slate-500">Nothing saved yet. Save houses as you browse to compare them later.</p>
+        <div class="card mt-4 px-6 py-12 text-center">
+          <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "heart" "h-7 w-7" %}</span>
+          <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">Nothing saved yet. Save houses as you browse to compare them later.</p>
+          <a href="{% url 'listings:search' %}" class="btn-primary btn-touch mt-5">Browse houses</a>
+        </div>
       {% endif %}
     </section>
 
     {% if recommended %}
       <section class="mt-12">
-        <h2 class="text-xl font-bold">From verified landlords{% if user.preferred_area %} near {{ user.preferred_area }}{% endif %}</h2>
+        <h2 class="text-xl font-bold tracking-tight">From verified landlords{% if user.preferred_area %} near {{ user.preferred_area }}{% endif %}</h2>
         <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {% for listing in recommended %}
             {% include "listings/partials/card.html" with listing=listing %}
@@ -114,24 +148,30 @@
 
   {% if pending_reviews_as_tenant or pending_reviews_as_landlord %}
     <section class="mt-12">
-      <h2 class="text-xl font-bold">Reviews waiting on you</h2>
+      <h2 class="text-xl font-bold tracking-tight">Reviews waiting on you</h2>
       <ul class="mt-4 space-y-3">
         {% for tenancy in pending_reviews_as_tenant %}
           <li class="card flex flex-wrap items-center justify-between gap-4 p-5">
-            <div>
-              <p class="font-semibold">Review {{ tenancy.landlord.full_name }}</p>
-              <p class="mt-1 text-sm text-slate-500">{{ tenancy.listing.title }}</p>
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-canvas-100 text-slate-500">{% icon "star" "h-5 w-5" %}</span>
+              <div>
+                <p class="font-semibold">Review {{ tenancy.landlord.full_name }}</p>
+                <p class="mt-0.5 text-sm text-slate-500">{{ tenancy.listing.title }}</p>
+              </div>
             </div>
-            <a href="{% url 'reviews:review_landlord' tenancy.pk %}" class="btn-primary">Write review</a>
+            <a href="{% url 'reviews:review_landlord' tenancy.pk %}" class="btn-primary btn-touch">Write review</a>
           </li>
         {% endfor %}
         {% for tenancy in pending_reviews_as_landlord %}
           <li class="card flex flex-wrap items-center justify-between gap-4 p-5">
-            <div>
-              <p class="font-semibold">Review {{ tenancy.tenant.full_name }}</p>
-              <p class="mt-1 text-sm text-slate-500">{{ tenancy.listing.title }}</p>
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-canvas-100 text-slate-500">{% icon "star" "h-5 w-5" %}</span>
+              <div>
+                <p class="font-semibold">Review {{ tenancy.tenant.full_name }}</p>
+                <p class="mt-0.5 text-sm text-slate-500">{{ tenancy.listing.title }}</p>
+              </div>
             </div>
-            <a href="{% url 'reviews:review_tenant' tenancy.pk %}" class="btn-primary">Write review</a>
+            <a href="{% url 'reviews:review_tenant' tenancy.pk %}" class="btn-primary btn-touch">Write review</a>
           </li>
         {% endfor %}
       </ul>

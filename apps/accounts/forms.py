@@ -8,9 +8,15 @@ from .models import User
 from .validators import normalize_phone, validate_kenyan_phone
 
 TEXT_INPUT_CLASS = (
-    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 "
-    "placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 "
+    "w-full min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 py-2.5 "
+    "text-slate-900 shadow-sm transition duration-150 placeholder:text-slate-400 "
+    "hover:border-slate-400 focus:border-brand focus:outline-none focus:ring-2 "
     "focus:ring-brand/30"
+)
+
+CHECKBOX_CLASS = (
+    "mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-brand transition "
+    "focus:ring-2 focus:ring-brand/40 focus:ring-offset-0"
 )
 
 
@@ -21,13 +27,18 @@ class StyledFormMixin:
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             widget = field.widget
-            if isinstance(widget, (forms.CheckboxInput, forms.RadioSelect)):
+            if isinstance(widget, forms.CheckboxInput):
+                existing = widget.attrs.get("class", "")
+                widget.attrs["class"] = f"{existing} {CHECKBOX_CLASS}".strip()
+                continue
+            if isinstance(widget, forms.RadioSelect):
                 continue
             if isinstance(widget, forms.ClearableFileInput):
                 widget.attrs.setdefault(
                     "class",
-                    "w-full text-sm text-slate-600 file:mr-3 file:rounded-lg "
-                    "file:border-0 file:bg-brand file:px-4 file:py-2 file:text-white",
+                    "w-full text-sm text-slate-600 file:mr-3 file:cursor-pointer "
+                    "file:rounded-lg file:border-0 file:bg-brand file:px-4 file:py-2 "
+                    "file:font-semibold file:text-white hover:file:bg-brand-600",
                 )
                 continue
             existing = widget.attrs.get("class", "")

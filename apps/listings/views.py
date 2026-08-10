@@ -63,6 +63,7 @@ def detail(request, slug: str):
     context = {
         "listing": listing,
         "photos_by_category": _group_photos(listing),
+        "gallery_photos": list(listing.photos.all()),
         "landlord_rating": landlord_stats["avg"],
         "landlord_review_count": landlord_stats["count"],
         "recent_reviews": (
