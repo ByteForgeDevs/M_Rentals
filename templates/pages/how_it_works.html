@@ -1,64 +1,98 @@
 {% extends "base.html" %}
+{% load ui %}
+
 {% block title %}How Mrentals works | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Landlord ID verification, a required photo set, written landmark directions and reviews tied to a confirmed tenancy.{% endblock %}
 
 {% block content %}
-<section class="mx-auto w-full max-w-4xl px-4 py-12">
-  <h1 class="text-3xl font-bold sm:text-4xl">How Mrentals works</h1>
-  <p class="mt-3 text-lg text-slate-600">
-    Two things block a good rental decision: is this real and where exactly is it, and can I
-    trust this person. Everything below exists to answer those two questions.
-  </p>
-
-  <div class="mt-10 space-y-10">
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold">1. Landlords get verified before they can publish</h2>
-      <p class="mt-2 text-slate-600">
-        A landlord or agent submits a national ID, plus one of: title deed, sale agreement,
-        property management letter, agency licence, or a scheduled video call. Our team reviews
-        every submission by hand. Until that is approved, a listing cannot go live.
-      </p>
-    </div>
-
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold">2. Every listing carries a full photo set</h2>
-      <p class="mt-2 text-slate-600">
-        A listing cannot be published until it has all five required photos:
-      </p>
-      <ul class="mt-4 grid gap-2 sm:grid-cols-2">
-        <li class="flex items-center gap-2 text-sm text-slate-700"><span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Building exterior</li>
-        <li class="flex items-center gap-2 text-sm text-slate-700"><span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Gate / entrance</li>
-        <li class="flex items-center gap-2 text-sm text-slate-700"><span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Room interior</li>
-        <li class="flex items-center gap-2 text-sm text-slate-700"><span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Water / electricity meter</li>
-        <li class="flex items-center gap-2 text-sm text-slate-700"><span class="h-1.5 w-1.5 rounded-full bg-brand"></span> Nearest landmark</li>
-      </ul>
-      <p class="mt-4 text-slate-600">A walkthrough video is optional but pushes a listing higher in search.</p>
-    </div>
-
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold">3. Location is written the way people navigate</h2>
-      <p class="mt-2 text-slate-600">
-        Instead of trusting a map pin that may not exist for a new building, every listing
-        names the nearest well-known landmark, the walk time from it, and written directions.
-        For example: <em class="text-slate-800">"200m from Quickmart Ruaka, take the murram road
-        opposite the petrol station, blue gate, third building past the mosque."</em>
-      </p>
-    </div>
-
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold">4. Reviews are tied to a real tenancy</h2>
-      <p class="mt-2 text-slate-600">
-        When someone moves in, the landlord records the tenancy against that tenant's account.
-        That single step unlocks both reviews: the tenant rates the landlord on responsiveness,
-        deposit fairness and whether the house matched the listing; the landlord rates the
-        tenant on payment, care of the property and communication. No confirmed tenancy, no
-        review, which is what keeps the ratings worth reading.
-      </p>
-    </div>
+<div class="shell py-12 sm:py-16">
+  <div class="max-w-2xl">
+    <p class="eyebrow">How it works</p>
+    <h1 class="mt-3 text-display-sm">Two questions, answered before you spend fare</h1>
+    <p class="mt-4 text-lg leading-relaxed text-slate-600">
+      Is this house real and where exactly is it, and can I trust this person. Everything
+      below exists to answer those two questions.
+    </p>
   </div>
 
-  <div class="mt-12 flex flex-col gap-3 sm:flex-row">
-    <a href="{% url 'listings:search' %}" class="btn-primary px-6 py-3">Browse houses</a>
-    <a href="{% url 'accounts:signup' %}" class="btn-outline px-6 py-3">Create an account</a>
+  <ol class="mt-12 space-y-5">
+    <li class="card p-6 sm:p-7">
+      <div class="flex gap-4 sm:gap-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">{% icon "shield-check" "h-5 w-5" %}</span>
+        <div class="min-w-0">
+          <p class="eyebrow">Step 1</p>
+          <h2 class="mt-1 text-xl font-semibold">Landlords get verified before they can publish</h2>
+          <p class="mt-2 leading-relaxed text-slate-600">
+            A landlord or agent submits a national ID, plus one of: title deed, sale agreement,
+            property management letter, agency licence, or a scheduled video call. Our team reviews
+            every submission by hand. Until that is approved, a listing cannot go live.
+          </p>
+        </div>
+      </div>
+    </li>
+
+    <li class="card p-6 sm:p-7">
+      <div class="flex gap-4 sm:gap-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">{% icon "camera" "h-5 w-5" %}</span>
+        <div class="min-w-0">
+          <p class="eyebrow">Step 2</p>
+          <h2 class="mt-1 text-xl font-semibold">Every listing carries a full photo set</h2>
+          <p class="mt-2 leading-relaxed text-slate-600">A listing cannot be published until it has all five required photos:</p>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            <li class="flex items-center gap-2 rounded-lg bg-canvas-100 px-3 py-2 text-sm text-slate-700">{% icon "check" "h-4 w-4 text-brand-600" %}Building exterior</li>
+            <li class="flex items-center gap-2 rounded-lg bg-canvas-100 px-3 py-2 text-sm text-slate-700">{% icon "check" "h-4 w-4 text-brand-600" %}Gate or entrance</li>
+            <li class="flex items-center gap-2 rounded-lg bg-canvas-100 px-3 py-2 text-sm text-slate-700">{% icon "check" "h-4 w-4 text-brand-600" %}Room interior</li>
+            <li class="flex items-center gap-2 rounded-lg bg-canvas-100 px-3 py-2 text-sm text-slate-700">{% icon "check" "h-4 w-4 text-brand-600" %}Water or electricity meter</li>
+            <li class="flex items-center gap-2 rounded-lg bg-canvas-100 px-3 py-2 text-sm text-slate-700">{% icon "check" "h-4 w-4 text-brand-600" %}Nearest landmark</li>
+          </ul>
+          <p class="mt-4 text-sm text-slate-600">A walkthrough video is optional but pushes a listing higher in search.</p>
+        </div>
+      </div>
+    </li>
+
+    <li class="card p-6 sm:p-7">
+      <div class="flex gap-4 sm:gap-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">{% icon "map-pin" "h-5 w-5" %}</span>
+        <div class="min-w-0">
+          <p class="eyebrow">Step 3</p>
+          <h2 class="mt-1 text-xl font-semibold">Location is written the way people navigate</h2>
+          <p class="mt-2 leading-relaxed text-slate-600">
+            Instead of trusting a map pin that may not exist for a new building, every listing
+            names the nearest well known landmark, the walk time from it, and written directions.
+          </p>
+          <blockquote class="mt-4 border-l-2 border-brand-200 bg-brand-50/60 py-3 pl-4 pr-3 text-sm italic leading-relaxed text-slate-700">
+            200m from Quickmart Ruaka, take the murram road opposite the petrol station,
+            blue gate, third building past the mosque.
+          </blockquote>
+        </div>
+      </div>
+    </li>
+
+    <li class="card p-6 sm:p-7">
+      <div class="flex gap-4 sm:gap-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">{% icon "star" "h-5 w-5" %}</span>
+        <div class="min-w-0">
+          <p class="eyebrow">Step 4</p>
+          <h2 class="mt-1 text-xl font-semibold">Reviews are tied to a real tenancy</h2>
+          <p class="mt-2 leading-relaxed text-slate-600">
+            When someone moves in, the landlord records the tenancy against that tenant's account.
+            That single step unlocks both reviews: the tenant rates the landlord on responsiveness,
+            deposit fairness and whether the house matched the listing; the landlord rates the
+            tenant on payment, care of the property and communication. No confirmed tenancy, no
+            review, which is what keeps the ratings worth reading.
+          </p>
+        </div>
+      </div>
+    </li>
+  </ol>
+
+  <div class="mt-12 overflow-hidden rounded-4xl bg-ink px-6 py-10 text-center sm:px-10 sm:py-12">
+    <h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Ready to look at real houses?</h2>
+    <p class="mx-auto mt-3 max-w-md text-slate-300">Every listing you see has passed all four steps above.</p>
+    <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href="{% url 'listings:search' %}" class="btn-primary btn-lg btn-touch">Browse houses</a>
+      <a href="{% url 'accounts:signup' %}" class="btn btn-lg btn-touch bg-white/10 text-white ring-1 ring-inset ring-white/25 hover:bg-white/20">Create an account</a>
+    </div>
   </div>
-</section>
+</div>
 {% endblock %}

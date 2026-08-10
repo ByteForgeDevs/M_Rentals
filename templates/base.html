@@ -1,4 +1,4 @@
-{% load static %}<!DOCTYPE html>
+{% load static ui %}<!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
   <meta charset="utf-8">
@@ -11,20 +11,26 @@
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
   {% block extra_head %}{% endblock %}
 </head>
-<body class="flex min-h-full flex-col bg-slate-50">
+<body class="flex min-h-full flex-col bg-canvas-50">
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
 
   {% include "partials/nav.html" %}
 
   <main id="main" class="flex-1">
     {% if messages %}
-      <div class="mx-auto w-full max-w-6xl px-4 pt-4">
+      <div class="shell pt-4" role="status" aria-live="polite">
         {% for message in messages %}
-          <div class="mb-2 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm
+          <div class="mb-2 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm animate-rise-in
             {% if message.tags == 'success' %}border-brand-200 bg-brand-50 text-brand-800
             {% elif message.tags == 'error' %}border-red-200 bg-red-50 text-red-800
             {% elif message.tags == 'warning' %}border-amber-200 bg-amber-50 text-amber-800
             {% else %}border-slate-200 bg-white text-slate-700{% endif %}">
+            <span class="mt-0.5 shrink-0">
+              {% if message.tags == 'success' %}{% icon "check" "h-4 w-4" %}
+              {% elif message.tags == 'error' %}{% icon "alert" "h-4 w-4" %}
+              {% elif message.tags == 'warning' %}{% icon "alert" "h-4 w-4" %}
+              {% else %}{% icon "info" "h-4 w-4" %}{% endif %}
+            </span>
             <span class="flex-1">{{ message }}</span>
           </div>
         {% endfor %}

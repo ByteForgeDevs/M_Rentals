@@ -1,16 +1,44 @@
-{% comment %}Renders one form field with label, help text and errors.{% endcomment %}
-<div class="{{ wrapper_class|default:'' }}">
+{% load ui %}
+{% comment %}
+Renders one form field with label, help text and errors.
+
+Error state is applied on the wrapper rather than on the widget, so a bound
+form does not have to be validated while the form is still being constructed.
+Help text is wrapped in a div because Django ships some of it as a list, and a
+list inside a paragraph breaks out of its own styling.
+{% endcomment %}
+<div class="{{ wrapper_class|default:'' }}{% if field.errors %} [&_input]:border-red-400 [&_select]:border-red-400 [&_textarea]:border-red-400{% endif %}">
   {% if field.field.widget.input_type == 'checkbox' %}
-    <label class="flex items-start gap-2.5">
+    <label class="flex cursor-pointer items-start gap-3 rounded-lg py-1.5 transition hover:text-slate-900">
       {{ field }}
-      <span class="text-sm text-slate-700">{{ field.label }}</span>
+      <span class="text-sm text-slate-700">
+        {{ field.label }}
+        {% if field.help_text %}<span class="mt-0.5 block text-xs text-slate-500">{{ field.help_text }}</span>{% endif %}
+      </span>
     </label>
+  {% elif field.field.widget.input_type == 'radio' %}
+    <fieldset>
+      <legend class="field-label">
+        {{ field.label }}{% if field.field.required %}<span class="text-brand" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
+      </legend>
+      <div class="grid gap-2 sm:grid-cols-2">
+        {% for choice in field %}
+          <label class="radio-card">
+            {{ choice.tag }}
+            <span class="text-sm font-medium text-slate-800">{{ choice.choice_label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+      {% if field.help_text %}<div class="field-help">{{ field.help_text }}</div>{% endif %}
+    </fieldset>
   {% else %}
     <label class="field-label" for="{{ field.id_for_label }}">
-      {{ field.label }}{% if field.field.required %}<span class="text-brand"> *</span>{% endif %}
+      {{ field.label }}{% if field.field.required %}<span class="text-brand" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
     </label>
     {{ field }}
+    {% if field.help_text %}<div class="field-help">{{ field.help_text }}</div>{% endif %}
   {% endif %}
-  {% if field.help_text %}<p class="field-help">{{ field.help_text }}</p>{% endif %}
-  {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+  {% for error in field.errors %}
+    <p class="field-error">{% icon "alert" "h-3.5 w-3.5 mt-px shrink-0" "2" %}<span>{{ error }}</span></p>
+  {% endfor %}
 </div>

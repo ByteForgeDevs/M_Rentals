@@ -60,23 +60,40 @@ def _apply_sort(qs: QuerySet[Listing], sort: str) -> QuerySet[Listing]:
     return qs.order_by("-published_at", "-created_at")
 
 
-def active_filter_summary(filters: dict) -> list[str]:
-    """Human-readable chips describing the filters currently applied."""
-    chips = []
+def active_filter_summary(filters: dict) -> list[dict]:
+    """Chips describing the filters currently applied.
+
+    Each chip carries the query parameter it came from so the template can
+    render it as a one tap "remove this filter" control.
+    """
+    chips: list[dict] = []
+
+    def add(param: str, label: str) -> None:
+        chips.append({"param": param, "label": label})
+
     if q := (filters.get("q") or "").strip():
-        chips.append(f'"{q}"')
+        add("q", f'"{q}"')
     if county := filters.get("county"):
-        chips.append(county)
+        add("county", county)
     if (mn := filters.get("min_price")) is not None:
-        chips.append(f"from KES {mn:,}")
+        add("min_price", f"from KES {mn:,}")
     if (mx := filters.get("max_price")) is not None:
-        chips.append(f"up to KES {mx:,}")
+        add("max_price", f"up to KES {mx:,}")
     bedrooms = filters.get("bedrooms")
     if bedrooms not in (None, ""):
         bedrooms = int(bedrooms)
-        chips.append("Bedsitter" if bedrooms == 0 else f"{bedrooms}+ bedrooms" if bedrooms >= 3 else f"{bedrooms} bedroom")
+        add(
+            "bedrooms",
+            "Bedsitter"
+            if bedrooms == 0
+            else f"{bedrooms}+ bedrooms"
+            if bedrooms >= 3
+            else f"{bedrooms} bedroom",
+        )
+    if property_type := filters.get("property_type"):
+        add("property_type", dict(Listing.PropertyType.choices).get(property_type, property_type))
     if filters.get("verified_only"):
-        chips.append("Verified landlords")
+        add("verified_only", "Verified landlords")
     if filters.get("has_video"):
-        chips.append("With video")
+        add("has_video", "With video")
     return chips

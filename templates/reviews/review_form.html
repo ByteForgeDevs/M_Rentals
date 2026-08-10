@@ -1,32 +1,37 @@
 {% extends "base.html" %}
+{% load ui %}
+
 {% block title %}{{ heading }} | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-2xl px-4 py-8">
-  <h1 class="text-3xl font-bold">{{ heading }}</h1>
+<div class="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+  <h1 class="text-display-sm">{{ heading }}</h1>
   <p class="mt-1 text-slate-600">{{ subtitle }}</p>
 
-  <div class="mt-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-    {{ tenancy.listing.title }} · {{ tenancy.listing.location_summary }} ·
-    {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
+  <div class="mt-6 flex items-start gap-2 rounded-xl border border-slate-200 bg-canvas-100 px-4 py-3.5 text-sm text-slate-600">
+    {% icon "home" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+    <span>
+    {{ tenancy.listing.title }} <span class="text-slate-300">/</span> {{ tenancy.listing.location_summary }} <span class="text-slate-300">/</span>
+    {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}</span>
   </div>
 
   <form method="post" class="mt-8 space-y-6" novalidate>
     {% csrf_token %}
     {% if form.non_field_errors %}
-      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      <div class="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+        <div>{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
       </div>
     {% endif %}
 
     {% for field in form %}
-      <fieldset class="card p-6">
+      <fieldset class="card p-6 sm:p-7">
         <legend class="field-label">{{ field.label }}</legend>
         <div class="mt-3 {% if field.field.widget.input_type == 'radio' %}flex flex-wrap gap-2{% endif %}">
           {% if field.field.widget.input_type == 'radio' %}
             {% for choice in field %}
-              <label class="cursor-pointer rounded-lg border border-slate-300 px-3 py-2 text-sm has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:text-brand-800">
-                {{ choice.tag }} <span class="ml-1">{{ choice.choice_label }}</span>
+              <label class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm transition hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:font-semibold has-[:checked]:text-brand-800 has-[:checked]:ring-1 has-[:checked]:ring-brand">
+                {{ choice.tag }}<span>{{ choice.choice_label }}</span>
               </label>
             {% endfor %}
           {% else %}
@@ -39,13 +44,14 @@
     {% endfor %}
 
     <div class="flex flex-wrap gap-3">
-      <button type="submit" class="btn-primary px-6 py-3">Publish review</button>
-      <a href="{% url 'reviews:tenancies' %}" class="btn-outline px-6 py-3">Cancel</a>
+      <button type="submit" class="btn-primary btn-lg btn-touch">Publish review</button>
+      <a href="{% url 'reviews:tenancies' %}" class="btn-outline btn-lg btn-touch">Cancel</a>
     </div>
   </form>
 
-  <p class="mt-6 text-sm text-slate-500">
-    Reviews are public and permanent, and are only possible because this tenancy is on record.
+  <p class="mt-6 flex items-start gap-2 rounded-xl bg-canvas-100 px-4 py-3.5 text-sm text-slate-600">
+    {% icon "info" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+    <span>Reviews are public and permanent, and are only possible because this tenancy is on record.</span>
   </p>
 </div>
 {% endblock %}

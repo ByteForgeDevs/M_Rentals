@@ -1,26 +1,32 @@
-{% extends "base.html" %}
+{% extends "accounts/base_auth.html" %}
+{% load ui %}
+
 {% block title %}Sign in | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Sign in to Mrentals to contact verified landlords and save the houses you like.{% endblock %}
 
-{% block content %}
-<div class="mx-auto w-full max-w-md px-4 py-12">
-  <h1 class="text-3xl font-bold">Sign in</h1>
-  <p class="mt-1 text-slate-600">Use the email or phone number you signed up with.</p>
+{% block auth_eyebrow %}Welcome back{% endblock %}
+{% block auth_headline %}Pick up where you left off{% endblock %}
+{% block auth_subhead %}Your saved houses, your landlord contacts and your tenancy record are all waiting.{% endblock %}
+{% block auth_headline_mobile %}Sign in{% endblock %}
+{% block auth_subhead_mobile %}Use the email or phone number you signed up with.{% endblock %}
+{% block auth_form_title %}Sign in{% endblock %}
 
-  <form method="post" class="card mt-8 space-y-5 p-6" novalidate>
+{% block auth_form %}
+  <form method="post" class="space-y-5" novalidate>
     {% csrf_token %}
     {% if form.non_field_errors %}
-      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      <div class="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+        <div>{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
       </div>
     {% endif %}
     {% include "partials/field.html" with field=form.username %}
     {% include "partials/field.html" with field=form.password %}
     <input type="hidden" name="next" value="{{ next }}">
-    <button type="submit" class="btn-primary w-full py-3">Sign in</button>
+    <button type="submit" class="btn-primary btn-lg btn-touch w-full">Sign in</button>
   </form>
+{% endblock %}
 
-  <p class="mt-6 text-center text-sm text-slate-600">
-    New here? <a href="{% url 'accounts:signup' %}" class="font-semibold text-brand hover:underline">Create an account</a>
-  </p>
-</div>
+{% block auth_footer %}
+  New here? <a href="{% url 'accounts:signup' %}" class="font-semibold text-brand hover:underline">Create an account</a>
 {% endblock %}

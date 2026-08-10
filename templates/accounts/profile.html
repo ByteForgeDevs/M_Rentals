@@ -1,15 +1,18 @@
 {% extends "base.html" %}
+{% load ui %}
+
 {% block title %}Your profile | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-3xl px-4 py-8">
-  <h1 class="text-3xl font-bold">Your profile</h1>
-  <p class="mt-1 text-slate-600">This is what the other side of a deal sees about you.</p>
+<div class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+  <p class="eyebrow">Account</p>
+  <h1 class="mt-1.5 text-display-sm">Your profile</h1>
+  <p class="mt-2 text-slate-600">This is what the other side of a deal sees about you.</p>
 
-  <section class="card mt-8 p-6">
+  <section class="card mt-8 p-6 sm:p-7">
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h2 class="text-lg font-semibold">Using Mrentals as a {{ user.get_role_display|lower }}</h2>
+        <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "users" "h-5 w-5 text-brand-600" %}Using Mrentals as a {{ user.get_role_display|lower }}</h2>
         <p class="mt-1 text-sm text-slate-500">
           {% if user.is_landlord %}
             Switch to a tenant account to search and save houses.
@@ -20,17 +23,17 @@
       </div>
       <form method="post" action="{% url 'accounts:switch_role' %}">{% csrf_token %}
         <input type="hidden" name="next" value="{% url 'accounts:profile' %}">
-        <button type="submit" class="btn-outline">
+        <button type="submit" class="btn-outline btn-touch">
           Switch to {% if user.is_landlord %}tenant{% else %}landlord{% endif %}
         </button>
       </form>
     </div>
   </section>
 
-  <section class="card mt-6 p-6">
+  <section class="card mt-6 p-6 sm:p-7">
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h2 class="text-lg font-semibold">Identity verification</h2>
+        <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "shield-check" "h-5 w-5 text-brand-600" %}Identity verification</h2>
         <p class="mt-1 text-sm text-slate-500">
           {% if user.is_landlord %}
             {% if user.is_verified_landlord %}Approved. Your listings can go live.{% else %}Not approved yet. Listings stay as drafts until this is done.{% endif %}
@@ -39,16 +42,17 @@
           {% endif %}
         </p>
       </div>
-      <a href="{% url 'verification:status' %}" class="btn-outline">Verification centre</a>
+      <a href="{% url 'verification:status' %}" class="btn-outline btn-touch">Verification centre</a>
     </div>
   </section>
 
-  <form method="post" enctype="multipart/form-data" class="card mt-6 space-y-5 p-6" novalidate>
+  <form method="post" enctype="multipart/form-data" class="card mt-6 space-y-5 p-6 sm:p-7" novalidate>
     {% csrf_token %}
-    <h2 class="text-lg font-semibold">Details</h2>
+    <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "info" "h-5 w-5 text-brand-600" %}Details</h2>
     {% if form.non_field_errors %}
-      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      <div class="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+        <div>{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
       </div>
     {% endif %}
     {% include "partials/field.html" with field=form.full_name %}
@@ -60,17 +64,17 @@
     {% include "partials/field.html" with field=form.bio %}
     {% include "partials/field.html" with field=form.avatar %}
     <div class="flex flex-wrap gap-3">
-      <button type="submit" class="btn-primary px-6 py-2.5">Save changes</button>
-      <a href="{% url 'accounts:public_profile' user.pk %}" class="btn-outline px-6 py-2.5">View public profile</a>
+      <button type="submit" class="btn-primary btn-lg btn-touch">Save changes</button>
+      <a href="{% url 'accounts:public_profile' user.pk %}" class="btn-outline btn-lg btn-touch">View public profile</a>
     </div>
   </form>
 
-  <section class="card mt-6 p-6">
-    <h2 class="text-lg font-semibold">Security</h2>
+  <section class="card mt-6 p-6 sm:p-7">
+    <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "key" "h-5 w-5 text-brand-600" %}Security</h2>
     <div class="mt-4 flex flex-wrap gap-3">
-      <a href="{% url 'accounts:password_change' %}" class="btn-outline">Change password</a>
+      <a href="{% url 'accounts:password_change' %}" class="btn-outline btn-touch">Change password</a>
       <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
-        <button type="submit" class="btn-ghost">Sign out</button>
+        <button type="submit" class="btn-ghost btn-touch">Sign out</button>
       </form>
     </div>
   </section>

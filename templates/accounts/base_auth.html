@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load ui %}
+
+{% comment %}
+Shared frame for the sign in and sign up pages. The left column carries the
+promise, the right column carries the form. On a phone only the form shows,
+because a renter on a bundle should not scroll past marketing to log in.
+
+Child templates set auth_headline / auth_subhead / auth_form_title and fill the
+auth_form and auth_footer blocks.
+{% endcomment %}
+
+{% block content %}
+<div class="shell py-10 sm:py-14">
+  <div class="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[1fr_minmax(0,420px)]">
+    <div class="hidden lg:block">
+      {% comment %}
+      This column is marketing copy beside the form. The page's single h1 lives
+      with the form itself, so the promise here is styled type, not a heading.
+      {% endcomment %}
+      <p class="eyebrow">{% block auth_eyebrow %}{% endblock %}</p>
+      <p class="mt-3 text-display-sm font-semibold tracking-tight text-slate-900">{% block auth_headline %}{% endblock %}</p>
+      <p class="mt-4 max-w-md text-lg leading-relaxed text-slate-600">{% block auth_subhead %}{% endblock %}</p>
+
+      <ul class="mt-8 space-y-4">
+        <li class="flex gap-3">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "shield-check" "h-5 w-5" %}</span>
+          <div>
+            <p class="font-semibold text-slate-900">ID verified landlords</p>
+            <p class="text-sm text-slate-600">We check national ID and proof of property before a landlord gets the badge.</p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "map-pin" "h-5 w-5" %}</span>
+          <div>
+            <p class="font-semibold text-slate-900">Directions that work</p>
+            <p class="text-sm text-slate-600">Written landmark directions, not a map pin dropped in the wrong estate.</p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "star" "h-5 w-5" %}</span>
+          <div>
+            <p class="font-semibold text-slate-900">Reviews both ways</p>
+            <p class="text-sm text-slate-600">Tenants rate landlords, landlords rate tenants, only after a real tenancy.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="mx-auto w-full max-w-md">
+      {% comment %}
+      One h1 for the page, rendered once and resized per breakpoint, so the
+      heading is never duplicated in the accessibility tree.
+      {% endcomment %}
+      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl lg:text-xl">{% block auth_form_title %}{% endblock %}</h1>
+      <p class="mt-2 text-slate-600 lg:hidden">{% block auth_subhead_mobile %}{% endblock %}</p>
+
+      <div class="panel mt-6 p-6 sm:p-7 lg:mt-4">
+        {% block auth_form %}{% endblock %}
+      </div>
+
+      <p class="mt-6 text-center text-sm text-slate-600">{% block auth_footer %}{% endblock %}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

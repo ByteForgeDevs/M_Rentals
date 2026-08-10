@@ -1,74 +1,79 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize static ui %}
 
 {% block title %}{{ listing.title }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ listing.bedrooms_label }} in {{ listing.location_summary }} at KES {{ listing.rent_amount|floatformat:0|intcomma }} per month.{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-6xl px-4 py-8">
+<div class="shell py-6 pb-28 lg:pb-10">
 
   {% if is_owner and not listing.is_published %}
-    <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-      This listing is <strong>{{ listing.get_status_display|lower }}</strong>, so only you can see it.
-      <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold underline">Manage it here</a>.
+    <div class="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+      <span>
+        This listing is <strong>{{ listing.get_status_display|lower }}</strong>, so only you can see it.
+        <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold underline">Manage it here</a>.
+      </span>
     </div>
   {% endif %}
 
-  <nav class="text-sm text-slate-500"><a href="{% url 'listings:search' %}" class="hover:text-brand">Houses</a>
-    <span class="px-1">/</span>{{ listing.location_summary }}</nav>
+  <nav class="flex items-center gap-1 text-sm text-slate-500" aria-label="Breadcrumb">
+    <a href="{% url 'listings:search' %}" class="hover:text-brand">Houses</a>
+    <span class="text-slate-300">/</span>
+    <span class="truncate">{{ listing.location_summary }}</span>
+  </nav>
 
-  <div class="mt-3 flex flex-wrap items-start justify-between gap-4">
-    <div>
-      <h1 class="text-3xl font-bold">{{ listing.title }}</h1>
-      <p class="mt-1 text-slate-600">{{ listing.get_property_type_display }} · {{ listing.bedrooms_label }} · {{ listing.location_summary }}</p>
+  <div class="mt-3 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+    <div class="min-w-0">
+      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{{ listing.title }}</h1>
+      <p class="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-1 text-sm text-slate-600">
+        <span>{{ listing.get_property_type_display }}</span>
+        <span class="text-slate-300">/</span>
+        <span>{{ listing.bedrooms_label }}</span>
+        <span class="text-slate-300">/</span>
+        <span class="inline-flex items-center gap-1">{% icon "map-pin" "h-4 w-4 text-slate-400" %}{{ listing.location_summary }}</span>
+      </p>
     </div>
-    <div class="text-right">
-      <p class="text-3xl font-bold text-slate-900">KES {{ listing.rent_amount|floatformat:0|intcomma }}</p>
-      <p class="text-sm text-slate-500">per month{% if listing.deposit_amount %} · deposit KES {{ listing.deposit_amount|floatformat:0|intcomma }}{% endif %}</p>
+    <div class="shrink-0 sm:text-right">
+      <p class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">KES {{ listing.rent_amount|floatformat:0|intcomma }}</p>
+      <p class="text-sm text-slate-500">per month{% if listing.deposit_amount %}, deposit KES {{ listing.deposit_amount|floatformat:0|intcomma }}{% endif %}</p>
     </div>
   </div>
 
   <div class="mt-4 flex flex-wrap gap-2">
     {% if listing.is_landlord_verified %}
-      <span class="badge-verified">Verified landlord</span>
+      <span class="badge-verified">{% icon "shield-check" "h-3.5 w-3.5" %}Verified landlord</span>
     {% else %}
-      <span class="badge-warn">Landlord not verified</span>
+      <span class="badge-warn">{% icon "alert" "h-3.5 w-3.5" %}Landlord not verified</span>
     {% endif %}
-    {% if listing.has_complete_photo_set %}<span class="badge-verified">Full photo set</span>{% endif %}
-    {% if listing.walkthrough_video_url %}<span class="badge-muted">Walkthrough video</span>{% endif %}
-    <span class="badge-muted">Available {{ listing.available_from|date:"j M Y" }}</span>
+    {% if listing.has_complete_photo_set %}<span class="badge-verified">{% icon "camera" "h-3.5 w-3.5" %}Full photo set</span>{% endif %}
+    {% if listing.walkthrough_video_url %}<span class="badge-muted">{% icon "video" "h-3.5 w-3.5" %}Walkthrough video</span>{% endif %}
+    <span class="badge-muted">{% icon "clock" "h-3.5 w-3.5" %}Available {{ listing.available_from|date:"j M Y" }}</span>
   </div>
 
-  <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
-    <div class="space-y-8">
+  <div class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <div class="min-w-0 space-y-6">
+      {% include "listings/partials/gallery.html" %}
 
-      {% for category, photos in photos_by_category %}
-        <section>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">{{ category }}</h2>
-          <div class="mt-3 grid gap-3 sm:grid-cols-2">
-            {% for photo in photos %}
-              <figure class="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:category }}"
-                     loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover">
-                {% if photo.caption %}<figcaption class="px-3 py-2 text-xs text-slate-500">{{ photo.caption }}</figcaption>{% endif %}
-              </figure>
-            {% endfor %}
-          </div>
-        </section>
-      {% empty %}
-        <p class="card p-6 text-sm text-slate-500">No photos uploaded yet.</p>
-      {% endfor %}
-
+      {% comment %}
+      Directions sit directly under the photos because finding the house is the
+      problem this product exists to solve.
+      {% endcomment %}
       <section class="card p-6">
-        <h2 class="text-lg font-semibold">How to find it</h2>
-        <p class="mt-1 text-sm text-slate-500">
-          {{ listing.walking_minutes_to_landmark }} minute walk from <strong class="text-slate-700">{{ listing.nearest_landmark }}</strong>
-        </p>
-        <p class="mt-3 whitespace-pre-line text-slate-700">{{ listing.landmark_description }}</p>
+        <div class="flex items-center gap-3">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "map-pin" "h-5 w-5" %}</span>
+          <div>
+            <h2 class="text-lg font-semibold">How to find it</h2>
+            <p class="text-sm text-slate-500">
+              {{ listing.walking_minutes_to_landmark }} minute walk from <strong class="font-semibold text-slate-700">{{ listing.nearest_landmark }}</strong>
+            </p>
+          </div>
+        </div>
+        <p class="mt-4 whitespace-pre-line leading-relaxed text-slate-700">{{ listing.landmark_description }}</p>
         {% if listing.latitude and listing.longitude %}
-          <a class="btn-outline mt-4" target="_blank" rel="noopener"
+          <a class="btn-outline btn-touch mt-4" target="_blank" rel="noopener"
              href="https://www.google.com/maps/search/?api=1&query={{ listing.latitude }},{{ listing.longitude }}">
-            Open approximate pin in Maps
+            {% icon "map-pin" "h-4 w-4" %}Open approximate pin in Maps
           </a>
           <p class="field-help">The pin is a bonus. The written directions above are the reliable part.</p>
         {% endif %}
@@ -76,18 +81,45 @@
 
       <section class="card p-6">
         <h2 class="text-lg font-semibold">About this house</h2>
-        <p class="mt-3 whitespace-pre-line text-slate-700">{{ listing.description }}</p>
+        <p class="mt-3 whitespace-pre-line leading-relaxed text-slate-700">{{ listing.description }}</p>
 
-        <dl class="mt-6 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5 text-sm sm:grid-cols-3">
-          <div><dt class="text-slate-500">Bedrooms</dt><dd class="font-medium">{{ listing.bedrooms_label }}</dd></div>
-          <div><dt class="text-slate-500">Bathrooms</dt><dd class="font-medium">{{ listing.bathrooms }}</dd></div>
-          <div><dt class="text-slate-500">Water</dt><dd class="font-medium">{{ listing.get_water_supply_display }}</dd></div>
-          <div><dt class="text-slate-500">Parking</dt><dd class="font-medium">{{ listing.has_parking|yesno:"Yes,No" }}</dd></div>
-          <div><dt class="text-slate-500">Security</dt><dd class="font-medium">{{ listing.has_security|yesno:"Yes,No" }}</dd></div>
-          <div><dt class="text-slate-500">Furnished</dt><dd class="font-medium">{{ listing.is_furnished|yesno:"Yes,No" }}</dd></div>
-          <div><dt class="text-slate-500">Water in rent</dt><dd class="font-medium">{{ listing.has_water_included|yesno:"Yes,No" }}</dd></div>
-          <div><dt class="text-slate-500">Water backup</dt><dd class="font-medium">{{ listing.has_borehole_backup|yesno:"Yes,No" }}</dd></div>
-          <div><dt class="text-slate-500">Pets</dt><dd class="font-medium">{{ listing.allows_pets|yesno:"Yes,No" }}</dd></div>
+        <dl class="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 border-t border-slate-100 pt-6 text-sm sm:grid-cols-3">
+          <div class="flex items-start gap-2.5">
+            {% icon "home" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Bedrooms</dt><dd class="font-medium">{{ listing.bedrooms_label }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "droplet" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Bathrooms</dt><dd class="font-medium">{{ listing.bathrooms }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "droplet" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Water</dt><dd class="font-medium">{{ listing.get_water_supply_display }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "key" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Parking</dt><dd class="font-medium">{{ listing.has_parking|yesno:"Yes,No" }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "shield-check" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Security</dt><dd class="font-medium">{{ listing.has_security|yesno:"Yes,No" }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "sparkle" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Furnished</dt><dd class="font-medium">{{ listing.is_furnished|yesno:"Yes,No" }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "droplet" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Water in rent</dt><dd class="font-medium">{{ listing.has_water_included|yesno:"Yes,No" }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "bolt" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Water backup</dt><dd class="font-medium">{{ listing.has_borehole_backup|yesno:"Yes,No" }}</dd></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            {% icon "heart" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
+            <div><dt class="text-slate-500">Pets</dt><dd class="font-medium">{{ listing.allows_pets|yesno:"Yes,No" }}</dd></div>
+          </div>
         </dl>
       </section>
 
@@ -95,7 +127,7 @@
         <section class="card p-6">
           <h2 class="text-lg font-semibold">Walkthrough video</h2>
           <a href="{{ listing.walkthrough_video_url }}" target="_blank" rel="noopener nofollow"
-             class="btn-outline mt-3">Watch the walkthrough</a>
+             class="btn-outline btn-touch mt-3">{% icon "video" "h-4 w-4" %}Watch the walkthrough</a>
           <p class="field-help">Opens on the landlord's video host, so data use is on you. Check your bundle.</p>
         </section>
       {% endif %}
@@ -107,52 +139,55 @@
             {% for review in recent_reviews %}
               <li class="border-b border-slate-100 pb-4 last:border-0 last:pb-0">
                 <div class="flex items-center gap-2">
-                  <span class="font-semibold text-slate-900">{{ review.overall_rating }}/5</span>
-                  <span class="text-sm text-slate-500">{{ review.author.full_name }} · {{ review.created_at|date:"M Y" }}</span>
+                  <span class="badge-muted gap-1">{% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ review.overall_rating }}/5</span>
+                  <span class="text-sm text-slate-500">{{ review.author.full_name }}, {{ review.created_at|date:"M Y" }}</span>
                 </div>
-                <p class="mt-1 text-sm text-slate-700">{{ review.comment }}</p>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{{ review.comment }}</p>
               </li>
             {% endfor %}
           </ul>
-          <a href="{% url 'accounts:public_profile' listing.landlord.pk %}" class="btn-outline mt-5">See all reviews</a>
+          <a href="{% url 'accounts:public_profile' listing.landlord.pk %}" class="btn-outline btn-touch mt-5">See all reviews</a>
         </section>
       {% endif %}
     </div>
 
     <aside class="space-y-4 lg:sticky lg:top-24 lg:self-start">
-      <div class="card p-5">
+      <div class="panel p-5">
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-ink font-bold text-white">{{ listing.landlord.display_initials }}</span>
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink font-bold text-white">{{ listing.landlord.display_initials }}</span>
           <div class="min-w-0">
             <a href="{% url 'accounts:public_profile' listing.landlord.pk %}" class="block truncate font-semibold hover:text-brand">{{ listing.landlord.full_name }}</a>
-            <p class="text-xs text-slate-500">
-              {% if landlord_rating %}{{ landlord_rating|floatformat:1 }}/5 from {{ landlord_review_count }} review{{ landlord_review_count|pluralize }}
+            <p class="flex items-center gap-1 text-xs text-slate-500">
+              {% if landlord_rating %}
+                {% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ landlord_rating|floatformat:1 }}/5 from {{ landlord_review_count }} review{{ landlord_review_count|pluralize }}
               {% else %}No reviews yet{% endif %}
             </p>
           </div>
         </div>
 
         {% if listing.is_landlord_verified %}
-          <p class="mt-4 rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-800">
-            ID and proof of property verified by Mrentals.
+          <p class="mt-4 flex items-start gap-2 rounded-lg bg-brand-50 px-3 py-2.5 text-xs leading-relaxed text-brand-800">
+            {% icon "shield-check" "h-4 w-4 mt-px shrink-0" %}
+            <span>ID and proof of property verified by Mrentals.</span>
           </p>
         {% else %}
-          <p class="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
-            This landlord has not completed verification. Do not send any deposit before viewing.
+          <p class="mt-4 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-800">
+            {% icon "alert" "h-4 w-4 mt-px shrink-0" %}
+            <span>This landlord has not completed verification. Do not send any deposit before viewing.</span>
           </p>
         {% endif %}
 
         {% if user.is_authenticated %}
-          <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
+          <div class="mt-4 space-y-2 border-t border-slate-100 pt-4">
             {% if listing.landlord.phone %}
-              <a href="tel:{{ listing.landlord.phone }}" class="btn-primary w-full">Call {{ listing.landlord.phone }}</a>
+              <a href="tel:{{ listing.landlord.phone }}" class="btn-primary btn-touch w-full">{% icon "phone" "h-4 w-4" %}Call {{ listing.landlord.phone }}</a>
             {% endif %}
             {% if listing.landlord.email %}
-              <a href="mailto:{{ listing.landlord.email }}" class="btn-outline w-full">Email the landlord</a>
+              <a href="mailto:{{ listing.landlord.email }}" class="btn-outline btn-touch w-full">{% icon "mail" "h-4 w-4" %}Email the landlord</a>
             {% endif %}
           </div>
         {% else %}
-          <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn-primary mt-4 w-full">Sign in to see contacts</a>
+          <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn-primary btn-touch mt-4 w-full">Sign in to see contacts</a>
         {% endif %}
 
         {% if user.is_authenticated and not is_owner %}
@@ -163,20 +198,22 @@
 
         {% if is_owner %}
           <div class="mt-4 space-y-2 border-t border-slate-100 pt-4">
-            <a href="{% url 'listings:manage' listing.slug %}" class="btn-dark w-full">Manage listing</a>
-            <a href="{% url 'listings:edit' listing.slug %}" class="btn-outline w-full">Edit details</a>
+            <a href="{% url 'listings:manage' listing.slug %}" class="btn-dark btn-touch w-full">Manage listing</a>
+            <a href="{% url 'listings:edit' listing.slug %}" class="btn-outline btn-touch w-full">Edit details</a>
           </div>
         {% endif %}
 
         <p class="mt-4 text-xs text-slate-400">{{ listing.view_count }} view{{ listing.view_count|pluralize }}</p>
       </div>
 
-      <div class="card p-5">
-        <h2 class="text-sm font-semibold">Before you pay anything</h2>
-        <ul class="mt-3 space-y-2 text-xs text-slate-600">
-          <li>Visit the house and match it against the photos above.</li>
-          <li>Confirm the meter readings shown in the listing photos.</li>
-          <li>Never send a deposit before you have seen the unit in person.</li>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <h2 class="flex items-center gap-2 text-sm font-semibold">
+          {% icon "shield-check" "h-4 w-4 text-brand-600" %}Before you pay anything
+        </h2>
+        <ul class="mt-3 space-y-2.5 text-xs leading-relaxed text-slate-600">
+          <li class="flex gap-2">{% icon "check" "h-3.5 w-3.5 mt-0.5 shrink-0 text-brand-500" %}Visit the house and match it against the photos above.</li>
+          <li class="flex gap-2">{% icon "check" "h-3.5 w-3.5 mt-0.5 shrink-0 text-brand-500" %}Confirm the meter readings shown in the listing photos.</li>
+          <li class="flex gap-2">{% icon "check" "h-3.5 w-3.5 mt-0.5 shrink-0 text-brand-500" %}Never send a deposit before you have seen the unit in person.</li>
         </ul>
       </div>
     </aside>
@@ -184,11 +221,37 @@
 
   {% if similar %}
     <section class="mt-14">
-      <h2 class="text-2xl font-bold">Other houses in {{ listing.area }}</h2>
+      <h2 class="text-2xl font-bold tracking-tight">Other houses in {{ listing.area }}</h2>
       <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {% for listing in similar %}{% include "listings/partials/card.html" %}{% endfor %}
       </div>
     </section>
   {% endif %}
 </div>
+
+{% comment %}
+Mobile action bar. On a phone the contact panel is far below the fold, so the
+price and the single most useful action stay in reach at all times.
+{% endcomment %}
+<div class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_-8px_rgba(15,23,42,0.25)] backdrop-blur lg:hidden">
+  <div class="flex items-center gap-3">
+    <div class="min-w-0 flex-1">
+      <p class="truncate text-base font-bold text-slate-900">KES {{ listing.rent_amount|floatformat:0|intcomma }}<span class="text-xs font-medium text-slate-500">/mo</span></p>
+      <p class="truncate text-xs text-slate-500">{{ listing.bedrooms_label }} in {{ listing.area }}</p>
+    </div>
+    {% if user.is_authenticated %}
+      {% if listing.landlord.phone %}
+        <a href="tel:{{ listing.landlord.phone }}" class="btn-primary btn-touch shrink-0">{% icon "phone" "h-4 w-4" %}Call landlord</a>
+      {% elif listing.landlord.email %}
+        <a href="mailto:{{ listing.landlord.email }}" class="btn-primary btn-touch shrink-0">{% icon "mail" "h-4 w-4" %}Email</a>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn-primary btn-touch shrink-0">Sign in to contact</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_body %}
+  <script src="{% static 'js/gallery.js' %}" defer></script>
 {% endblock %}

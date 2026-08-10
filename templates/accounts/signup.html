@@ -1,29 +1,42 @@
-{% extends "base.html" %}
+{% extends "accounts/base_auth.html" %}
+{% load ui %}
+
 {% block title %}Create an account | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Create a free Mrentals account to contact verified landlords across Kenya.{% endblock %}
 
-{% block content %}
-<div class="mx-auto w-full max-w-md px-4 py-12">
-  <h1 class="text-3xl font-bold">Create your account</h1>
-  <p class="mt-1 text-slate-600">Give us an email or a phone number. Either one works to sign in.</p>
+{% block auth_eyebrow %}Free to join{% endblock %}
+{% block auth_headline %}Rent without the guesswork{% endblock %}
+{% block auth_subhead %}One account lets you contact verified landlords, save houses and build a tenancy record that follows you.{% endblock %}
+{% block auth_headline_mobile %}Create your account{% endblock %}
+{% block auth_subhead_mobile %}Give us an email or a phone number. Either one works to sign in.{% endblock %}
+{% block auth_form_title %}Create your account{% endblock %}
 
-  <form method="post" class="card mt-8 space-y-5 p-6" novalidate>
+{% block auth_form %}
+  <form method="post" class="space-y-5" novalidate>
     {% csrf_token %}
     {% if form.non_field_errors %}
-      <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      <div class="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
+        <div>{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
       </div>
     {% endif %}
     {% include "partials/field.html" with field=form.full_name %}
     {% include "partials/field.html" with field=form.email %}
     {% include "partials/field.html" with field=form.phone %}
     {% include "partials/field.html" with field=form.role %}
-    {% include "partials/field.html" with field=form.password1 %}
-    {% include "partials/field.html" with field=form.password2 %}
-    <button type="submit" class="btn-primary w-full py-3">Create account</button>
-  </form>
 
-  <p class="mt-6 text-center text-sm text-slate-600">
-    Already have an account? <a href="{% url 'accounts:login' %}" class="font-semibold text-brand hover:underline">Sign in</a>
-  </p>
-</div>
+    <div class="space-y-4 border-t border-slate-100 pt-5">
+      {% include "partials/field.html" with field=form.password1 %}
+      {% include "partials/field.html" with field=form.password2 %}
+    </div>
+
+    <button type="submit" class="btn-primary btn-lg btn-touch w-full">Create account</button>
+    <p class="text-center text-xs leading-relaxed text-slate-500">
+      By creating an account you agree to keep your listings and reviews honest.
+    </p>
+  </form>
+{% endblock %}
+
+{% block auth_footer %}
+  Already have an account? <a href="{% url 'accounts:login' %}" class="font-semibold text-brand hover:underline">Sign in</a>
 {% endblock %}

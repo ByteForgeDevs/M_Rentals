@@ -1,0 +1,97 @@
+{% load ui %}
+{% comment %}
+Listing gallery.
+
+The old page stacked one section per photo category, which turned five photos
+into a very long scroll and buried the directions. This shows one large photo
+with the rest as thumbnails, which is how people actually scan a house.
+
+Without JavaScript every thumbnail stays a plain link to the full image, so the
+photos are never locked behind a script.
+{% endcomment %}
+
+{% if gallery_photos %}
+<div id="gallery" class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+  <div class="relative bg-slate-900">
+    <a href="{{ gallery_photos.0.image.url }}" data-gallery-open target="_blank" rel="noopener"
+       class="block aspect-[4/3] w-full sm:aspect-[16/10]">
+      <img data-gallery-stage src="{{ gallery_photos.0.image.url }}"
+           alt="{{ gallery_photos.0.caption|default:listing.title }}"
+           class="h-full w-full bg-slate-100 object-cover" decoding="async">
+    </a>
+
+    {% if gallery_photos|length > 1 %}
+      <button type="button" data-gallery-step="-1" aria-label="Previous photo"
+              class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-800 shadow-md backdrop-blur transition hover:bg-white">
+        {% icon "arrow-left" "h-5 w-5" %}
+      </button>
+      <button type="button" data-gallery-step="1" aria-label="Next photo"
+              class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-800 shadow-md backdrop-blur transition hover:bg-white">
+        {% icon "arrow-right" "h-5 w-5" %}
+      </button>
+    {% endif %}
+
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/65 to-transparent p-3 sm:p-4">
+      <p data-gallery-caption class="text-sm font-medium text-white drop-shadow"></p>
+      <div class="flex shrink-0 items-center gap-2">
+        <span data-gallery-counter class="badge bg-black/55 text-white backdrop-blur"></span>
+        <button type="button" data-gallery-open
+                class="pointer-events-auto badge bg-white/95 text-slate-800 shadow-sm backdrop-blur transition hover:bg-white">
+          {% icon "expand" "h-3.5 w-3.5" %}View
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {% if gallery_photos|length > 1 %}
+    <div class="flex gap-2 overflow-x-auto p-3 [scrollbar-width:thin]">
+      {% for photo in gallery_photos %}
+        <a href="{{ photo.image.url }}" data-gallery-thumb
+           data-src="{{ photo.image.url }}"
+           data-caption="{{ photo.caption|default:photo.get_category_display|escape }}"
+           data-category="{{ photo.get_category_display|escape }}"
+           target="_blank" rel="noopener"
+           title="{{ photo.get_category_display }}"
+           class="group relative block h-16 w-24 shrink-0 overflow-hidden rounded-lg bg-slate-100 ring-offset-white transition sm:h-20 sm:w-28">
+          <img src="{{ photo.image.url }}" alt="{{ photo.get_category_display }}"
+               loading="lazy" decoding="async" class="h-full w-full object-cover">
+          <span class="absolute inset-x-0 bottom-0 truncate bg-black/55 px-1.5 py-0.5 text-[10px] font-medium text-white">
+            {{ photo.get_category_display }}
+          </span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<dialog id="gallery-lightbox"
+        class="w-[min(96vw,72rem)] rounded-2xl bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm">
+  <div class="relative overflow-hidden rounded-2xl bg-slate-950">
+    <img data-lightbox-image src="" alt="" class="max-h-[80vh] w-full object-contain">
+
+    <form method="dialog" class="absolute right-3 top-3">
+      <button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white"
+              aria-label="Close photo viewer">{% icon "close" "h-5 w-5" %}</button>
+    </form>
+
+    <button type="button" data-lightbox-step="-1" aria-label="Previous photo"
+            class="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white">
+      {% icon "arrow-left" "h-5 w-5" %}
+    </button>
+    <button type="button" data-lightbox-step="1" aria-label="Next photo"
+            class="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition hover:bg-white">
+      {% icon "arrow-right" "h-5 w-5" %}
+    </button>
+
+    <div class="flex items-center justify-between gap-3 px-4 py-3">
+      <p data-lightbox-caption class="text-sm text-white"></p>
+      <span data-lightbox-counter class="shrink-0 text-xs text-slate-400"></span>
+    </div>
+  </div>
+</dialog>
+{% else %}
+<div class="card flex flex-col items-center gap-2 p-10 text-center text-slate-400">
+  {% icon "camera" "h-8 w-8" %}
+  <p class="text-sm font-medium">No photos uploaded yet.</p>
+</div>
+{% endif %}

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load ui %}
+
 {% block title %}{{ person.full_name }} | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-4xl px-4 py-8">
-  <div class="card p-6">
+<div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
+  <div class="panel p-6 sm:p-7">
     <div class="flex flex-wrap items-start gap-5">
       {% if person.avatar %}
         <img src="{{ person.avatar.url }}" alt="" class="h-20 w-20 rounded-full object-cover">
@@ -13,15 +15,15 @@
         </div>
       {% endif %}
       <div class="min-w-0 flex-1">
-        <h1 class="text-2xl font-bold">{{ person.full_name }}</h1>
+        <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{{ person.full_name }}</h1>
         <p class="mt-1 text-sm text-slate-500">
-          {{ person.get_role_display }} · joined {{ person.date_joined|date:"F Y" }}
+          {{ person.get_role_display }} <span class="text-slate-300">/</span> joined {{ person.date_joined|date:"F Y" }}
         </p>
         <div class="mt-3 flex flex-wrap gap-2">
-          {% if person.is_verified_landlord %}<span class="badge-verified">Verified landlord</span>{% endif %}
-          {% if person.is_verified_tenant %}<span class="badge-verified">Verified tenant</span>{% endif %}
+          {% if person.is_verified_landlord %}<span class="badge-verified">{% icon "shield-check" "h-3.5 w-3.5" %}Verified landlord</span>{% endif %}
+          {% if person.is_verified_tenant %}<span class="badge-verified">{% icon "shield-check" "h-3.5 w-3.5" %}Verified tenant</span>{% endif %}
           {% if not person.is_verified_landlord and not person.is_verified_tenant %}
-            <span class="badge-muted">Identity not verified</span>
+            <span class="badge-muted">{% icon "info" "h-3.5 w-3.5" %}Identity not verified</span>
           {% endif %}
         </div>
         {% if person.bio %}<p class="mt-4 text-slate-700">{{ person.bio|linebreaksbr }}</p>{% endif %}
@@ -52,7 +54,7 @@
 
   {% if active_listings %}
     <section class="mt-10">
-      <h2 class="text-xl font-bold">Houses posted by {{ person.full_name }}</h2>
+      <h2 class="text-xl font-bold tracking-tight">Houses posted by {{ person.full_name }}</h2>
       <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {% for listing in active_listings %}
           {% include "listings/partials/card.html" with listing=listing %}
@@ -63,17 +65,17 @@
 
   <section class="mt-10 grid gap-8 lg:grid-cols-2">
     <div>
-      <h2 class="text-xl font-bold">What tenants say</h2>
+      <h2 class="text-xl font-bold tracking-tight">What tenants say</h2>
       {% if landlord_reviews %}
         <ul class="mt-4 space-y-4">
           {% for review in landlord_reviews %}
             <li class="card p-5">
               <div class="flex items-center justify-between gap-3">
                 <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
-                <span class="badge-verified">{{ review.overall_rating|floatformat:1 }}/5</span>
+                <span class="badge-verified">{% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ review.overall_rating|floatformat:1 }}/5</span>
               </div>
               <p class="mt-1 text-xs text-slate-500">
-                {{ review.tenancy.listing.title }} · {{ review.created_at|date:"M Y" }}
+                {{ review.tenancy.listing.title }} <span class="text-slate-300">/</span> {{ review.created_at|date:"M Y" }}
               </p>
               {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
               <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
@@ -90,17 +92,17 @@
     </div>
 
     <div>
-      <h2 class="text-xl font-bold">What landlords say</h2>
+      <h2 class="text-xl font-bold tracking-tight">What landlords say</h2>
       {% if tenant_reviews %}
         <ul class="mt-4 space-y-4">
           {% for review in tenant_reviews %}
             <li class="card p-5">
               <div class="flex items-center justify-between gap-3">
                 <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
-                <span class="badge-verified">{{ review.overall_rating|floatformat:1 }}/5</span>
+                <span class="badge-verified">{% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ review.overall_rating|floatformat:1 }}/5</span>
               </div>
               <p class="mt-1 text-xs text-slate-500">
-                {{ review.tenancy.listing.title }} · {{ review.created_at|date:"M Y" }}
+                {{ review.tenancy.listing.title }} <span class="text-slate-300">/</span> {{ review.created_at|date:"M Y" }}
               </p>
               {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
               <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">

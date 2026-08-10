@@ -1,15 +1,30 @@
-{% load humanize %}
-<div class="flex flex-wrap items-center justify-between gap-3">
+{% load humanize ui %}
+<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
   <p class="text-sm text-slate-600">
-    <strong class="text-slate-900">{{ total_count|intcomma }}</strong>
+    <strong class="text-base font-bold text-slate-900">{{ total_count|intcomma }}</strong>
     house{{ total_count|pluralize }} found
   </p>
   {% if filter_chips %}
-    <div class="flex flex-wrap gap-1.5">
-      {% for chip in filter_chips %}<span class="badge-muted">{{ chip }}</span>{% endfor %}
-    </div>
+    <a href="{% url 'listings:search' %}" hx-get="{% url 'listings:search' %}" hx-target="#results"
+       hx-swap="innerHTML" hx-push-url="true" class="link-quiet text-sm">Clear all filters</a>
   {% endif %}
 </div>
+
+{% if filter_chips %}
+  <ul class="mt-3 flex flex-wrap gap-2">
+    {% for chip in filter_chips %}
+      <li>
+        {% query_without chip.param as chip_url %}
+        <a href="{{ chip_url }}" hx-get="{{ chip_url }}" hx-target="#results" hx-swap="innerHTML" hx-push-url="true"
+           class="chip group" title="Remove this filter">
+          {{ chip.label }}
+          <span class="text-slate-400 transition group-hover:text-slate-700">{% icon "close" "h-3.5 w-3.5" "2" %}</span>
+          <span class="sr-only">Remove filter</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
 
 {% if page_obj.object_list %}
   <div class="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -17,27 +32,34 @@
   </div>
 
   {% if page_obj.has_other_pages %}
-    <nav class="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+    <nav class="mt-9 flex items-center justify-center gap-2" aria-label="Pagination">
       {% if page_obj.has_previous %}
-        <a class="btn-outline" hx-get="?{{ querystring }}&page={{ page_obj.previous_page_number }}"
+        <a class="btn-outline btn-touch" hx-get="?{{ querystring }}&page={{ page_obj.previous_page_number }}"
            hx-target="#results" hx-swap="innerHTML" hx-push-url="true"
-           href="?{{ querystring }}&page={{ page_obj.previous_page_number }}">Previous</a>
+           href="?{{ querystring }}&page={{ page_obj.previous_page_number }}">{% icon "arrow-left" "h-4 w-4" %}Previous</a>
       {% endif %}
       <span class="px-3 text-sm text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
       {% if page_obj.has_next %}
-        <a class="btn-outline" hx-get="?{{ querystring }}&page={{ page_obj.next_page_number }}"
+        <a class="btn-outline btn-touch" hx-get="?{{ querystring }}&page={{ page_obj.next_page_number }}"
            hx-target="#results" hx-swap="innerHTML" hx-push-url="true"
-           href="?{{ querystring }}&page={{ page_obj.next_page_number }}">Next</a>
+           href="?{{ querystring }}&page={{ page_obj.next_page_number }}">Next{% icon "arrow-right" "h-4 w-4" %}</a>
       {% endif %}
     </nav>
   {% endif %}
 {% else %}
-  <div class="mt-5 card p-10 text-center">
-    <h2 class="text-lg font-semibold">No houses match those filters</h2>
-    <p class="mx-auto mt-2 max-w-md text-sm text-slate-600">
+  <div class="card mt-5 px-6 py-14 text-center">
+    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">
+      {% icon "search" "h-7 w-7" %}
+    </span>
+    <h2 class="mt-5 text-lg font-semibold">No houses match those filters</h2>
+    <p class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-slate-600">
       Try widening the price range, or search a nearby landmark instead of an estate name.
       New buildings are often listed by the landmark closest to them.
     </p>
-    <a href="{% url 'listings:search' %}" class="btn-outline mt-5">Clear filters</a>
+    <div class="mt-6 flex flex-wrap justify-center gap-2">
+      <a href="{% url 'listings:search' %}" hx-get="{% url 'listings:search' %}" hx-target="#results"
+         hx-swap="innerHTML" hx-push-url="true" class="btn-primary btn-touch">Clear filters</a>
+      <a href="{% url 'pages:how_it_works' %}" class="btn-outline btn-touch">How verification works</a>
+    </div>
   </div>
 {% endif %}

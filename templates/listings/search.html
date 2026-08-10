@@ -1,13 +1,25 @@
 {% extends "base.html" %}
+{% load ui %}
+
 {% block title %}Find a house | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}Search verified long term rentals across Kenya by price, area, bedrooms and landmark.{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-6xl px-4 py-8">
-  <h1 class="text-3xl font-bold">Find a house</h1>
-  <p class="mt-1 text-slate-600">Filter by what you can afford, then check the landmark photos before you travel.</p>
+<div class="shell py-8">
+  <h1 class="text-display-sm">Find a house</h1>
+  <p class="mt-2 max-w-xl text-slate-600">Filter by what you can afford, then check the landmark photos before you travel.</p>
 
-  <div class="mt-8 grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-    <aside class="lg:sticky lg:top-24 lg:self-start">
+  <div class="mt-7 grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)]">
+    {% comment %}
+    One form serves both layouts. On desktop it is a sticky sidebar. On a phone
+    the same markup becomes a bottom sheet, toggled with a checkbox so the
+    drawer keeps working even when JavaScript never arrives.
+    {% endcomment %}
+    <input type="checkbox" id="filter-toggle" class="peer sr-only" tabindex="-1">
+
+    <aside class="fixed inset-0 z-50 hidden peer-checked:block lg:sticky lg:inset-auto lg:top-24 lg:z-auto lg:block lg:self-start">
+      <label for="filter-toggle" class="absolute inset-0 cursor-pointer bg-ink/40 lg:hidden" aria-label="Close filters"></label>
+
       <form id="filters" method="get" action="{% url 'listings:search' %}"
             hx-get="{% url 'listings:search' %}"
             hx-target="#results"
@@ -15,9 +27,14 @@
             hx-push-url="true"
             hx-trigger="change, search, submit"
             hx-indicator="#search-indicator"
-            class="card space-y-4 p-5">
-        <div>
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Filters</h2>
+            class="absolute inset-x-0 bottom-0 max-h-[86vh] animate-rise-in space-y-4 overflow-y-auto rounded-t-3xl bg-white p-5 pb-6 shadow-panel lg:static lg:max-h-none lg:animate-none lg:rounded-2xl lg:border lg:border-slate-200 lg:shadow-sm">
+        <div class="flex items-center justify-between">
+          <h2 class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            {% icon "filter" "h-4 w-4" %}Filters
+          </h2>
+          <label for="filter-toggle" class="-mr-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden" aria-label="Close filters">
+            {% icon "close" "h-5 w-5" %}
+          </label>
         </div>
 
         {% include "partials/field.html" with field=form.q %}
@@ -31,7 +48,7 @@
         {% include "partials/field.html" with field=form.bedrooms %}
         {% include "partials/field.html" with field=form.property_type %}
 
-        <div class="space-y-2 border-t border-slate-100 pt-4">
+        <div class="space-y-2.5 border-t border-slate-100 pt-4">
           {% include "partials/field.html" with field=form.verified_only %}
           {% include "partials/field.html" with field=form.has_video %}
         </div>
@@ -43,14 +60,21 @@
         {% endif %}
 
         <div class="flex gap-2 border-t border-slate-100 pt-4">
-          <button type="submit" class="btn-primary flex-1">Apply</button>
-          <a href="{% url 'listings:search' %}" class="btn-outline">Clear</a>
+          <button type="submit" class="btn-primary btn-touch flex-1">Apply</button>
+          <a href="{% url 'listings:search' %}" class="btn-outline btn-touch">Clear</a>
         </div>
+        <label for="filter-toggle" class="btn-dark btn-touch w-full cursor-pointer lg:hidden">Show results</label>
       </form>
     </aside>
 
-    <section>
-      <div id="search-indicator" class="htmx-indicator mb-3 text-sm text-slate-500">Searching…</div>
+    <section class="min-w-0">
+      <div class="mb-4 flex items-center gap-3 lg:hidden">
+        <label for="filter-toggle" class="btn-outline btn-touch cursor-pointer">
+          {% icon "filter" "h-4 w-4" %}Filters{% if filter_chips %}<span class="ml-0.5 rounded-full bg-brand px-1.5 py-0.5 text-xs font-semibold text-white">{{ filter_chips|length }}</span>{% endif %}
+        </label>
+        <div id="search-indicator" class="htmx-indicator text-sm text-slate-500">Searching...</div>
+      </div>
+
       <div id="results">
         {% include "listings/partials/results.html" %}
       </div>
