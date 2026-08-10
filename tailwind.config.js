@@ -30,6 +30,15 @@ module.exports = {
         canvas: ramp("canvas", [50, 100, 200]),
         // The background of a card or panel. Was a literal white before dark mode.
         surface: withVar("--surface"),
+        // The only legible foreground on a solid brand-green fill. It has to be
+        // a token rather than a literal `text-white`, because the brand ramp is
+        // tuned for white surfaces in light mode and lifted in dark mode: white
+        // on the dark-mode green is 2.15:1, while near-black on it is 9.39:1.
+        // So green fills carry light marks in light mode and dark marks in dark.
+        "on-brand": withVar("--on-brand"),
+        // The boundary of a form control, which WCAG treats as non-text content
+        // needing 3:1 rather than as decoration.
+        field: withVar("--field-border"),
         // Deliberately dark in both themes. Avatars, the dark CTA blocks and the
         // lightbox are dark surfaces by design, not by theme.
         ink: withVar("--ink"),
@@ -37,6 +46,11 @@ module.exports = {
         // photo in either theme, so its badges keep a light chip and dark text.
         paper: "#FFFFFF",
         carbon: "#1E293B",
+        // Secondary marks for the same job: muted light text on an always-dark
+        // block, and the brand green as it reads on a light chip. Both are
+        // literal because the surfaces they sit on do not follow the theme.
+        "paper-muted": "#CBD5E1",
+        "brand-fixed": "#12634F",
       },
       fontFamily: {
         sans: [

@@ -198,12 +198,12 @@ class ListingSearchForm(forms.Form):
             widget = field.widget
             if isinstance(widget, forms.CheckboxInput):
                 widget.attrs.setdefault(
-                    "class", "h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand"
+                    "class", "h-4 w-4 rounded border-field text-brand-600 focus:ring-brand"
                 )
             else:
                 widget.attrs.setdefault(
                     "class",
-                    "w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-sm "
+                    "w-full rounded-lg border border-field bg-surface px-3 py-2 text-sm "
                     "text-slate-900 focus:border-brand focus:outline-none focus:ring-2 "
                     "focus:ring-brand/30",
                 )

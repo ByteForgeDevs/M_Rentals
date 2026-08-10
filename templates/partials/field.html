@@ -19,7 +19,7 @@ list inside a paragraph breaks out of its own styling.
   {% elif field.field.widget.input_type == 'radio' %}
     <fieldset>
       <legend class="field-label">
-        {{ field.label }}{% if field.field.required %}<span class="text-brand" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
+        {{ field.label }}{% if field.field.required %}<span class="text-brand-700" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
       </legend>
       <div class="grid gap-2 sm:grid-cols-2">
         {% for choice in field %}
@@ -33,7 +33,7 @@ list inside a paragraph breaks out of its own styling.
     </fieldset>
   {% else %}
     <label class="field-label" for="{{ field.id_for_label }}">
-      {{ field.label }}{% if field.field.required %}<span class="text-brand" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
+      {{ field.label }}{% if field.field.required %}<span class="text-brand-700" aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}
     </label>
     {{ field }}
     {% if field.help_text %}<div class="field-help">{{ field.help_text }}</div>{% endif %}

@@ -18,8 +18,8 @@
   {% endif %}
 
   <nav class="flex items-center gap-1 text-sm text-slate-500" aria-label="Breadcrumb">
-    <a href="{% url 'listings:search' %}" class="hover:text-brand">Houses</a>
-    <span class="text-slate-300">/</span>
+    <a href="{% url 'listings:search' %}" class="hover:text-brand-700">Houses</a>
+    <span class="text-slate-500">/</span>
     <span class="truncate">{{ listing.location_summary }}</span>
   </nav>
 
@@ -28,9 +28,9 @@
       <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{{ listing.title }}</h1>
       <p class="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-1 text-sm text-slate-600">
         <span>{{ listing.get_property_type_display }}</span>
-        <span class="text-slate-300">/</span>
+        <span class="text-slate-500">/</span>
         <span>{{ listing.bedrooms_label }}</span>
-        <span class="text-slate-300">/</span>
+        <span class="text-slate-500">/</span>
         <span class="inline-flex items-center gap-1">{% icon "map-pin" "h-4 w-4 text-slate-400" %}{{ listing.location_summary }}</span>
       </p>
     </div>
@@ -156,7 +156,7 @@
         <div class="flex items-center gap-3">
           <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink font-bold text-white">{{ listing.landlord.display_initials }}</span>
           <div class="min-w-0">
-            <a href="{% url 'accounts:public_profile' listing.landlord.pk %}" class="block truncate font-semibold hover:text-brand">{{ listing.landlord.full_name }}</a>
+            <a href="{% url 'accounts:public_profile' listing.landlord.pk %}" class="block truncate font-semibold hover:text-brand-700">{{ listing.landlord.full_name }}</a>
             <p class="flex items-center gap-1 text-xs text-slate-500">
               {% if landlord_rating %}
                 {% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ landlord_rating|floatformat:1 }}/5 from {{ landlord_review_count }} review{{ landlord_review_count|pluralize }}

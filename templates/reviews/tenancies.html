@@ -22,11 +22,11 @@
         {% for tenancy in as_tenant %}
           <li class="card-interactive reveal flex flex-wrap items-center justify-between gap-4 p-5">
             <div class="min-w-0">
-              <a href="{{ tenancy.listing.get_absolute_url }}" class="font-semibold hover:text-brand">{{ tenancy.listing.title }}</a>
+              <a href="{{ tenancy.listing.get_absolute_url }}" class="font-semibold hover:text-brand-700">{{ tenancy.listing.title }}</a>
               <p class="mt-1 text-sm text-slate-500">
                 Landlord:
-                <a href="{% url 'accounts:public_profile' tenancy.landlord.pk %}" class="hover:text-brand">{{ tenancy.landlord.full_name }}</a>
-                <span class="text-slate-300">/</span> {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
+                <a href="{% url 'accounts:public_profile' tenancy.landlord.pk %}" class="hover:text-brand-700">{{ tenancy.landlord.full_name }}</a>
+                <span class="text-slate-500">/</span> {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
               </p>
             </div>
             {% if tenancy.has_landlord_review %}
@@ -54,9 +54,9 @@
         {% for tenancy in as_landlord %}
           <li class="card-interactive reveal flex flex-wrap items-center justify-between gap-4 p-5">
             <div class="min-w-0">
-              <a href="{% url 'accounts:public_profile' tenancy.tenant.pk %}" class="font-semibold hover:text-brand">{{ tenancy.tenant.full_name }}</a>
+              <a href="{% url 'accounts:public_profile' tenancy.tenant.pk %}" class="font-semibold hover:text-brand-700">{{ tenancy.tenant.full_name }}</a>
               <p class="mt-1 text-sm text-slate-500">
-                {{ tenancy.listing.title }} <span class="text-slate-300">/</span>
+                {{ tenancy.listing.title }} <span class="text-slate-500">/</span>
                 {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}
               </p>
             </div>

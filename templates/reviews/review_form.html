@@ -11,7 +11,7 @@
   <div class="mt-6 flex items-start gap-2 rounded-xl border border-slate-200 bg-canvas-100 px-4 py-3.5 text-sm text-slate-600">
     {% icon "home" "h-4 w-4 mt-0.5 shrink-0 text-slate-400" %}
     <span>
-    {{ tenancy.listing.title }} <span class="text-slate-300">/</span> {{ tenancy.listing.location_summary }} <span class="text-slate-300">/</span>
+    {{ tenancy.listing.title }} <span class="text-slate-500">/</span> {{ tenancy.listing.location_summary }} <span class="text-slate-500">/</span>
     {{ tenancy.started_on|date:"M Y" }} to {% if tenancy.ended_on %}{{ tenancy.ended_on|date:"M Y" }}{% else %}present{% endif %}</span>
   </div>
 
@@ -30,7 +30,7 @@
         <div class="mt-3 {% if field.field.widget.input_type == 'radio' %}flex flex-wrap gap-2{% endif %}">
           {% if field.field.widget.input_type == 'radio' %}
             {% for choice in field %}
-              <label class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-surface px-3.5 py-2 text-sm transition hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:font-semibold has-[:checked]:text-brand-800 has-[:checked]:ring-1 has-[:checked]:ring-brand">
+              <label class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg border border-field bg-surface px-3.5 py-2 text-sm transition hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:font-semibold has-[:checked]:text-brand-800 has-[:checked]:ring-1 has-[:checked]:ring-brand">
                 {{ choice.tag }}<span>{{ choice.choice_label }}</span>
               </label>
             {% endfor %}

@@ -88,12 +88,12 @@
                 </div>
               {% endif %}
               <div class="min-w-0 flex-1">
-                <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold transition-colors group-hover:text-brand">{{ listing.title }}</a>
+                <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold transition-colors group-hover:text-brand-700">{{ listing.title }}</a>
                 <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
                   <span>{{ listing.location_summary }}</span>
-                  <span class="text-slate-300">/</span>
+                  <span class="text-slate-500">/</span>
                   <span>KES {{ listing.rent_amount|floatformat:0|intcomma }}/mo</span>
-                  <span class="text-slate-300">/</span>
+                  <span class="text-slate-500">/</span>
                   <span>{{ listing.view_count }} view{{ listing.view_count|pluralize }}</span>
                 </p>
                 {% if listing.missing_photo_labels %}

@@ -111,7 +111,7 @@
       <div class="mt-5 space-y-4">
         {% for photo_form in formset %}
           <div class="rounded-xl border border-slate-200 bg-canvas-50 p-4">
-            <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Photo {{ forloop.counter }}</p>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Photo {{ forloop.counter }}</p>
             {{ photo_form.id }}
             <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_200px_140px]">
               {% include "partials/field.html" with field=photo_form.image %}

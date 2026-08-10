@@ -53,8 +53,8 @@ the copy.
             {% icon "search" "h-5 w-5" %}
           </span>
           <input id="hero-q" name="q" type="search" placeholder="Try Ruaka, Quickmart or Nyali"
-                 class="w-full rounded-xl border-slate-300 bg-surface py-3 pl-11 pr-4 text-slate-900 shadow-sm transition
-                        placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/30
+                 class="w-full rounded-xl border-field bg-surface py-3 pl-11 pr-4 text-slate-900 shadow-sm transition
+                        placeholder:text-slate-500 focus:border-brand focus:ring-2 focus:ring-brand/30
                         sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus:ring-0">
         </div>
         <button type="submit" class="btn-primary btn-lg btn-touch shrink-0 sm:rounded-xl">
@@ -69,7 +69,7 @@ the copy.
         </div>
         <div class="reveal">
           <dt class="eyebrow">Verified landlords</dt>
-          <dd class="mt-1 text-2xl font-bold tracking-tight text-brand sm:text-3xl">{{ stats.verified_landlords|intcomma }}</dd>
+          <dd class="mt-1 text-2xl font-bold tracking-tight text-brand-700 sm:text-3xl">{{ stats.verified_landlords|intcomma }}</dd>
         </div>
         <div class="reveal">
           <dt class="eyebrow">Tenant reviews</dt>
@@ -148,7 +148,7 @@ the copy.
       <a href="{% url 'listings:search' %}?q={{ area.area|urlencode }}" class="chip reveal reveal-fade py-2">
         {% icon "map-pin" "h-3.5 w-3.5 text-brand-500" %}
         {{ area.area }}, {{ area.county }}
-        <span class="rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500">{{ area.count }}</span>
+        <span class="rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-600">{{ area.count }}</span>
       </a>
     {% endfor %}
   </div>
@@ -204,7 +204,7 @@ the copy.
 
     <div>
       <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Own or manage a house?</h2>
-      <p class="mx-auto mt-4 max-w-xl leading-relaxed text-slate-300">
+      <p class="mx-auto mt-4 max-w-xl leading-relaxed text-paper-muted">
         Get verified once, then post as many houses as you like. Verified listings appear above
         everything else in search.
       </p>
