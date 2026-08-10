@@ -5,12 +5,17 @@
 {% block meta_description %}Landlord ID verification, a required photo set, written landmark directions and reviews tied to a confirmed tenancy.{% endblock %}
 
 {% block content %}
-<section class="relative overflow-hidden border-b border-slate-200 bg-white">
-  <div class="pointer-events-none absolute inset-0 bg-mesh-brand"></div>
-  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(60%_60%_at_30%_0%,black,transparent)]"></div>
-  <div class="pointer-events-none absolute -right-20 -top-24 h-80 w-80 animate-float rounded-full bg-brand-200/40 blur-3xl"></div>
+{% comment %}
+The hero runs over a photograph of an ordinary block of flats, because that is
+the thing being talked about. The scrim carries the contrast, so the copy stays
+readable whatever the photo does behind it.
+{% endcomment %}
+<section class="photo-band scrim-light border-b border-slate-200 bg-white">
+  {% backdrop "estate-day" loading="eager" %}
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-mesh-brand opacity-60"></div>
+  <div class="pointer-events-none absolute -right-20 -top-24 -z-10 h-80 w-80 animate-float rounded-full bg-brand-200/40 blur-3xl"></div>
 
-  <div class="shell relative py-14 sm:py-20">
+  <div class="shell py-14 sm:py-20">
     <div class="max-w-2xl">
       <p class="eyebrow animate-fade-in">How it works</p>
       <h1 class="mt-3 animate-rise-in text-display-sm sm:text-display">Two questions, answered before you spend fare</h1>
@@ -99,12 +104,12 @@
     </li>
   </ol>
 
-  <div class="reveal reveal-scale relative mt-12 overflow-hidden rounded-4xl bg-ink px-6 py-12 text-center shadow-panel sm:px-10 sm:py-14">
-    <div class="pointer-events-none absolute inset-0 bg-mesh-dark"></div>
-    <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 animate-float rounded-full bg-brand/25 blur-3xl"></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
+  <div class="photo-band scrim-dark reveal reveal-scale mt-12 rounded-4xl bg-ink px-6 py-12 text-center shadow-panel sm:px-10 sm:py-14">
+    {% backdrop "estate-night" %}
+    <div class="pointer-events-none absolute -right-16 -top-16 -z-10 h-56 w-56 animate-float rounded-full bg-brand/25 blur-3xl"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
 
-    <div class="relative">
+    <div>
       <h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Ready to look at real houses?</h2>
       <p class="mx-auto mt-3 max-w-md text-slate-300">Every listing you see has passed all four steps above.</p>
       <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
