@@ -203,7 +203,7 @@ class ListingSearchForm(forms.Form):
             else:
                 widget.attrs.setdefault(
                     "class",
-                    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm "
+                    "w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-sm "
                     "text-slate-900 focus:border-brand focus:outline-none focus:ring-2 "
                     "focus:ring-brand/30",
                 )

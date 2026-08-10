@@ -146,7 +146,7 @@
       </div>
     </section>
 
-    <div class="fixed inset-x-0 bottom-0 z-30 flex gap-3 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
+    <div class="fixed inset-x-0 bottom-0 z-30 flex gap-3 border-t border-slate-200 bg-surface/95 px-4 py-3 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
       <button type="submit" class="btn-primary btn-lg btn-touch flex-1 lg:flex-none">Save listing</button>
       {% if listing %}
         <a href="{% url 'listings:manage' listing.slug %}" class="btn-outline btn-lg btn-touch">Cancel</a>

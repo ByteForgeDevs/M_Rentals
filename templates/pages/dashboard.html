@@ -38,8 +38,8 @@
     {% endif %}
   {% else %}
     <div class="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50 px-5 py-4">
-      <div class="flex items-start gap-2.5 text-sm text-brand-800">
-        {% icon "shield-check" "h-4.5 w-4.5 mt-px shrink-0" %}
+      <div class="flex min-w-0 flex-1 items-start gap-2.5 text-sm text-brand-800">
+        {% icon "shield-check" "h-5 w-5 mt-px shrink-0" %}
         <span>
           {% if user.is_landlord %}
             You are not verified yet, so your listings cannot go live.

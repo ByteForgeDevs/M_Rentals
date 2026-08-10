@@ -107,3 +107,59 @@
     { passive: true }
   );
 })();
+
+/* Colour theme.
+ *
+ * The theme itself is resolved by an inline script in the head, before first
+ * paint, so this file only handles switching it afterwards. An explicit choice
+ * is remembered; until one is made the page follows the operating system, and
+ * keeps following it if the system setting changes mid-session. */
+(function () {
+  var root = document.documentElement;
+  var media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  var stored = function () {
+    try {
+      return localStorage.getItem("theme");
+    } catch (e) {
+      return null;
+    }
+  };
+
+  var sync = function () {
+    var isDark = root.classList.contains("dark");
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", isDark ? "#0F1115" : "#1B9D80");
+
+    var buttons = document.querySelectorAll("[data-theme-toggle]");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute("aria-pressed", isDark ? "true" : "false");
+      buttons[i].setAttribute(
+        "aria-label",
+        isDark ? "Switch to light mode" : "Switch to dark mode"
+      );
+    }
+  };
+
+  document.addEventListener("click", function (event) {
+    var button = event.target.closest("[data-theme-toggle]");
+    if (!button) return;
+    event.preventDefault();
+    var next = root.classList.contains("dark") ? "light" : "dark";
+    root.classList.toggle("dark", next === "dark");
+    try {
+      localStorage.setItem("theme", next);
+    } catch (e) {}
+    sync();
+  });
+
+  var onSystemChange = function () {
+    if (stored()) return;
+    root.classList.toggle("dark", media.matches);
+    sync();
+  };
+  if (media.addEventListener) media.addEventListener("change", onSystemChange);
+  else if (media.addListener) media.addListener(onSystemChange);
+
+  sync();
+})();

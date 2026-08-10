@@ -3,6 +3,130 @@
 @tailwind utilities;
 
 @layer base {
+  /* Design tokens.
+   *
+   * Every neutral, canvas and brand shade is a channel triplet so Tailwind can
+   * apply opacity modifiers to it. Dark mode swaps the triplets on <html>, which
+   * is why the templates carry almost no `dark:` variants: a card is
+   * `bg-surface` in both themes and the token decides what that means.
+   *
+   * The neutral and brand ramps invert rather than merely darken, because their
+   * light end is used as a surface (`bg-slate-100`, `bg-brand-50`) and their
+   * dark end as text (`text-slate-900`, `text-brand-700`). Both roles have to
+   * swap together or the pairings that work in light mode break in dark. */
+  :root {
+    --brand-50: 238 250 246;
+    --brand-100: 210 242 233;
+    --brand-200: 166 229 212;
+    --brand-300: 111 211 186;
+    --brand-400: 59 184 155;
+    --brand-500: 27 157 128;
+    --brand-600: 21 126 103;
+    --brand-700: 18 99 79;
+    --brand-800: 15 78 64;
+    --brand-900: 11 59 48;
+
+    --slate-50: 248 250 252;
+    --slate-100: 241 245 249;
+    --slate-200: 226 232 240;
+    --slate-300: 203 213 225;
+    --slate-400: 148 163 184;
+    --slate-500: 100 116 139;
+    --slate-600: 71 85 105;
+    --slate-700: 51 65 85;
+    --slate-800: 30 41 59;
+    --slate-900: 15 23 42;
+    --slate-950: 2 6 23;
+
+    /* Warm neutral for large surfaces. Pure slate reads cold behind listing
+       photos, which sit on these surfaces on every page. */
+    --canvas-50: 250 250 249;
+    --canvas-100: 245 245 243;
+    --canvas-200: 233 233 229;
+
+    --red-50: 254 242 242;
+    --red-200: 254 202 202;
+    --red-400: 248 113 113;
+    --red-600: 220 38 38;
+    --red-700: 185 28 28;
+    --red-800: 153 27 27;
+
+    --amber-50: 255 251 235;
+    --amber-200: 253 230 138;
+    --amber-400: 251 191 36;
+    --amber-700: 180 83 9;
+    --amber-800: 146 64 14;
+
+    --surface: 255 255 255;
+    --ink: 0 0 0;
+
+    --shadow: 15 23 42;
+    --mesh: 27 157 128;
+    --mesh-2: 59 184 155;
+    --mesh-a1: 0.13;
+    --mesh-a2: 0.16;
+    --grid: 15 23 42;
+    --grid-a: 0.045;
+
+    color-scheme: light;
+  }
+
+  .dark {
+    /* Greens are lifted, not just darkened. A brand green tuned for white
+       loses its life against a dark surface. */
+    --brand-50: 12 43 36;
+    --brand-100: 18 59 49;
+    --brand-200: 27 86 71;
+    --brand-300: 44 125 104;
+    --brand-400: 69 183 156;
+    --brand-500: 34 179 148;
+    --brand-600: 52 198 166;
+    --brand-700: 95 217 188;
+    --brand-800: 143 232 209;
+    --brand-900: 196 242 228;
+
+    --slate-50: 21 23 28;
+    --slate-100: 27 30 36;
+    --slate-200: 38 42 50;
+    --slate-300: 51 56 67;
+    --slate-400: 124 132 148;
+    --slate-500: 152 161 178;
+    --slate-600: 179 187 201;
+    --slate-700: 203 210 221;
+    --slate-800: 221 226 234;
+    --slate-900: 241 244 248;
+    --slate-950: 250 252 255;
+
+    --canvas-50: 15 17 21;
+    --canvas-100: 22 25 32;
+    --canvas-200: 31 35 43;
+
+    --red-50: 56 20 22;
+    --red-200: 92 33 36;
+    --red-400: 219 106 106;
+    --red-600: 240 148 148;
+    --red-700: 248 180 180;
+    --red-800: 254 205 205;
+
+    --amber-50: 54 36 10;
+    --amber-200: 92 62 16;
+    --amber-400: 233 179 63;
+    --amber-700: 246 206 128;
+    --amber-800: 251 225 174;
+
+    --surface: 23 26 32;
+    --ink: 5 7 10;
+
+    /* Elevation on a dark surface comes from a blacker, deeper shadow. */
+    --shadow: 0 0 0;
+    --mesh-a1: 0.2;
+    --mesh-a2: 0.16;
+    --grid: 226 232 240;
+    --grid-a: 0.05;
+
+    color-scheme: dark;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
@@ -14,7 +138,7 @@
     @apply font-semibold tracking-tight text-slate-900;
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-white;
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-surface;
   }
   /* Respect the system setting. Animation here is decoration, never meaning. */
   @media (prefers-reduced-motion: reduce) {
@@ -77,7 +201,7 @@
     @apply btn bg-ink text-white shadow-sm hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lift active:translate-y-0;
   }
   .btn-outline {
-    @apply btn border border-slate-300 bg-white text-slate-800 shadow-sm
+    @apply btn border border-slate-300 bg-surface text-slate-800 shadow-sm
            hover:-translate-y-0.5 hover:border-brand hover:bg-brand-50 hover:text-brand-700 hover:shadow-card
            active:translate-y-0;
   }
@@ -85,7 +209,7 @@
     @apply btn text-slate-600 hover:bg-slate-100 hover:text-slate-900;
   }
   .btn-danger {
-    @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
+    @apply btn border border-red-200 bg-surface text-red-600 hover:bg-red-50;
   }
   .btn-lg {
     @apply px-6 py-3 text-base;
@@ -99,19 +223,53 @@
     @apply min-h-[44px];
   }
 
+  /* Site header.
+   *
+   * The primary links sit in a segmented group so the bar reads as one control
+   * rather than as loose text, and the current page is marked by a raised pill
+   * instead of a flat tint. */
+  .nav-group {
+    @apply flex items-center gap-0.5 rounded-full bg-slate-100/70 p-1
+           ring-1 ring-inset ring-slate-200/60;
+  }
+  .nav-link {
+    @apply relative rounded-full px-3.5 py-2 text-sm font-medium text-slate-600
+           transition-all duration-200 ease-out-soft
+           hover:text-slate-900 focus-visible:text-slate-900;
+  }
+  .nav-link:hover {
+    @apply bg-surface/70;
+  }
+  .nav-link-active {
+    @apply bg-surface text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200/70;
+  }
+  /* A square control for an icon on its own, sized to stay tappable. */
+  .icon-btn {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full
+           text-slate-500 transition-all duration-200 ease-out-soft
+           hover:bg-slate-100 hover:text-slate-900 active:scale-95;
+  }
+  /* The account avatar. A gradient gives it presence at 32px, where a flat
+     fill just reads as a grey dot. */
+  .avatar {
+    @apply flex shrink-0 items-center justify-center rounded-full
+           bg-gradient-to-br from-brand-400 to-brand-700 text-xs font-bold text-white
+           ring-2 ring-surface;
+  }
+
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-card;
+    @apply rounded-xl border border-slate-200 bg-surface shadow-card;
   }
   .card-interactive {
     @apply card transition-all duration-300 ease-out-soft
            hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-float;
   }
   .panel {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-card;
+    @apply rounded-2xl border border-slate-200 bg-surface shadow-card;
   }
   /* A panel that sits on a busy surface and needs to lift off it. */
   .panel-float {
-    @apply rounded-2xl border border-white/70 bg-white/85 shadow-float backdrop-blur-xl;
+    @apply rounded-2xl border border-surface/70 bg-surface/85 shadow-float backdrop-blur-xl;
   }
 
   /* Photographic section backdrops.
@@ -134,13 +292,20 @@
      through on the side that does not. */
   .scrim-light::before {
     content: "";
-    @apply pointer-events-none absolute inset-0 -z-10 bg-white/60 backdrop-blur-[1px];
+    @apply pointer-events-none absolute inset-0 -z-10 bg-surface/60 backdrop-blur-[1px];
   }
-  .scrim-light::after {
+  .scrim-light:not(.scrim-even)::after {
     content: "";
     @apply pointer-events-none absolute inset-0 -z-10
-           bg-gradient-to-b from-white via-white/85 to-white/50
-           sm:bg-gradient-to-r sm:from-white sm:via-white/70 sm:to-transparent;
+           bg-gradient-to-b from-surface via-surface/85 to-surface/50
+           sm:bg-gradient-to-r sm:from-surface sm:via-surface/70 sm:to-transparent;
+  }
+  /* For a band whose copy is centred or spans the full width. A directional
+     gradient assumes the text lives in one column and leaves the middle of a
+     centred layout under-protected, so this trades the reveal for an even wash. */
+  .scrim-light.scrim-even::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10 bg-surface/35;
   }
   /* Keeps white text readable on a dark photo. */
   .scrim-dark::before {
@@ -161,7 +326,7 @@
   /* The tinted band every interior page opens with, so the dashboard and the
      account screens share the surface language of the marketing pages. */
   .page-band {
-    @apply relative overflow-hidden border-b border-slate-200 bg-white;
+    @apply relative overflow-hidden border-b border-slate-200 bg-surface;
   }
   .page-band::before {
     content: "";
@@ -209,12 +374,12 @@
     @apply badge bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200;
   }
   .badge-solid {
-    @apply badge bg-white/95 text-slate-800 shadow-sm ring-1 ring-inset ring-black/5 backdrop-blur;
+    @apply badge bg-paper/95 text-carbon shadow-sm ring-1 ring-inset ring-black/5 backdrop-blur;
   }
 
   /* A removable filter, so it needs to read as a control rather than a label. */
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white
+    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-surface
            px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm
            transition-all duration-200 ease-out-soft
            hover:-translate-y-0.5 hover:border-brand hover:text-brand-700 hover:shadow-card;
@@ -237,14 +402,14 @@
     @apply mt-1 flex items-start gap-1 text-xs font-medium text-red-600;
   }
   .field-input {
-    @apply w-full rounded-lg border-slate-300 text-slate-900 shadow-sm transition
+    @apply w-full rounded-lg border-slate-300 bg-surface text-slate-900 shadow-sm transition
            placeholder:text-slate-400 hover:border-slate-400
            focus:border-brand focus:ring-2 focus:ring-brand/30;
   }
   /* Radio groups read as choices, not as form plumbing, so they get a target
      the size of a card rather than the size of a dot. */
   .radio-card {
-    @apply flex cursor-pointer items-center gap-2.5 rounded-lg border border-slate-300 bg-white
+    @apply flex cursor-pointer items-center gap-2.5 rounded-lg border border-slate-300 bg-surface
            px-3.5 py-3 transition-all duration-200 ease-out-soft
            hover:-translate-y-0.5 hover:border-brand hover:bg-brand-50/50 hover:shadow-sm
            has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:ring-1 has-[:checked]:ring-brand;
@@ -277,7 +442,7 @@
     @apply py-12 sm:py-16;
   }
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-600;
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-700;
   }
   .link-quiet {
     @apply font-medium text-slate-600 underline-offset-4 hover:text-brand hover:underline;
