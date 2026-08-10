@@ -10,7 +10,7 @@ from .validators import normalize_phone, validate_kenyan_phone
 TEXT_INPUT_CLASS = (
     "w-full min-h-[44px] rounded-lg border border-field bg-surface px-3 py-2.5 "
     "text-slate-900 shadow-sm transition duration-150 placeholder:text-slate-500 "
-    "hover:border-slate-400 focus:border-brand focus:outline-none focus:ring-2 "
+    "hover:border-slate-500 focus:border-brand focus:outline-none focus:ring-2 "
     "focus:ring-brand/30"
 )
 
