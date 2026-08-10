@@ -114,6 +114,50 @@
     @apply rounded-2xl border border-white/70 bg-white/85 shadow-float backdrop-blur-xl;
   }
 
+  /* Photographic section backdrops.
+     A photo behind text is only ever as good as its scrim, so the scrim is a
+     component rather than something each template improvises. `photo-band`
+     positions the section and clips the image; the scrim variants sit between
+     the photo and the content. */
+  .photo-band {
+    @apply relative isolate overflow-hidden;
+  }
+  /* The photo sits below the scrims. They share a stacking context, so an
+     equal z-index would let the image paint over them by DOM order. */
+  .photo-band > picture img {
+    @apply z-[-20];
+  }
+  /* Keeps ink-coloured text readable on a bright daytime photo.
+     A flat wash strong enough for text leaves nothing of the photograph, so
+     the floor is deliberately moderate and a second gradient goes solid under
+     the column that actually carries the copy. The photo is then free to show
+     through on the side that does not. */
+  .scrim-light::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10 bg-white/60 backdrop-blur-[1px];
+  }
+  .scrim-light::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10
+           bg-gradient-to-b from-white via-white/85 to-white/50
+           sm:bg-gradient-to-r sm:from-white sm:via-white/70 sm:to-transparent;
+  }
+  /* Keeps white text readable on a dark photo. */
+  .scrim-dark::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10 bg-ink/60;
+  }
+  .scrim-dark::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10
+           bg-gradient-to-br from-ink/85 via-ink/55 to-brand-900/70;
+  }
+  /* A photo used as texture rather than as subject, behind a tinted section. */
+  .scrim-canvas::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10 bg-canvas-50/[0.94] backdrop-blur-[1px];
+  }
+
   /* The tinted band every interior page opens with, so the dashboard and the
      account screens share the surface language of the marketing pages. */
   .page-band {
@@ -233,7 +277,7 @@
     @apply py-12 sm:py-16;
   }
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-500;
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-600;
   }
   .link-quiet {
     @apply font-medium text-slate-600 underline-offset-4 hover:text-brand hover:underline;

@@ -7,6 +7,7 @@ audience actually uses.
 """
 
 from django import template
+from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
@@ -79,3 +80,52 @@ def query_without(context, *params):
     query.pop("page", None)
     encoded = query.urlencode()
     return f"?{encoded}" if encoded else "?"
+
+
+# Photographic backdrops. Each entry names a file stem in
+# ``static/img/backdrops`` and the focal point to hold on to when the band is
+# cropped, so the subject survives on a narrow phone.
+BACKDROPS = {
+    "estate-day": "object-center",
+    "estate-night": "object-bottom",
+    "balconies-warm": "object-center",
+    "keys-door": "object-center",
+    "facade-grid": "object-center",
+}
+
+
+@register.simple_tag
+def backdrop(name, css_class="", *, loading="lazy"):
+    """Render a decorative photographic background for a section.
+
+    The image is purely presentational, so it is hidden from assistive
+    technology and carries an empty alt. WebP is served first with a JPEG
+    fallback, because a slice of this audience browses through proxies that
+    never learned WebP. The parent element must be positioned, and the caller
+    is responsible for laying a scrim over the top so text keeps its contrast.
+    """
+    position = BACKDROPS.get(name)
+    if position is None:
+        return ""
+
+    stem = f"img/backdrops/{name}"
+    small_webp, large_webp = static(f"{stem}-sm.webp"), static(f"{stem}.webp")
+    small_jpg, large_jpg = static(f"{stem}-sm.jpg"), static(f"{stem}.jpg")
+
+    return format_html(
+        '<picture aria-hidden="true">'
+        '<source type="image/webp" srcset="{} 560w, {} 960w" sizes="100vw">'
+        '<source type="image/jpeg" srcset="{} 560w, {} 960w" sizes="100vw">'
+        '<img src="{}" alt="" loading="{}" decoding="async" fetchpriority="{}" '
+        'class="pointer-events-none absolute inset-0 h-full w-full object-cover {} {}">'
+        "</picture>",
+        small_webp,
+        large_webp,
+        small_jpg,
+        large_jpg,
+        large_jpg,
+        loading,
+        "high" if loading == "eager" else "auto",
+        position,
+        css_class,
+    )

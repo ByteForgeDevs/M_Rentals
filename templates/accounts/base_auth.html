@@ -11,13 +11,14 @@ auth_form and auth_footer blocks.
 {% endcomment %}
 
 {% block content %}
-<div class="relative overflow-hidden">
-  <div class="pointer-events-none absolute inset-0 bg-mesh-brand"></div>
-  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(65%_55%_at_35%_10%,black,transparent)]"></div>
-  <div class="pointer-events-none absolute -right-24 top-0 h-96 w-96 animate-float rounded-full bg-brand-200/35 blur-3xl"></div>
-  <div class="pointer-events-none absolute -bottom-24 -left-20 h-80 w-80 animate-float-slow rounded-full bg-brand-100/50 blur-3xl"></div>
+<div class="photo-band scrim-light">
+  {% backdrop "balconies-warm" loading="eager" %}
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-mesh-brand opacity-70"></div>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-grid-slate bg-grid [mask-image:radial-gradient(65%_55%_at_35%_10%,black,transparent)]"></div>
+  <div class="pointer-events-none absolute -right-24 top-0 -z-10 h-96 w-96 animate-float rounded-full bg-brand-200/35 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-24 -left-20 -z-10 h-80 w-80 animate-float-slow rounded-full bg-brand-100/50 blur-3xl"></div>
 
-  <div class="shell relative py-10 sm:py-14">
+  <div class="shell py-10 sm:py-14">
     <div class="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[1fr_minmax(0,420px)]">
       <div class="hidden lg:block">
         {% comment %}
@@ -65,7 +66,14 @@ auth_form and auth_footer blocks.
           {% block auth_form %}{% endblock %}
         </div>
 
-        <p class="mt-6 text-center text-sm text-slate-600">{% block auth_footer %}{% endblock %}</p>
+        {% comment %}
+        This line sits on the photograph rather than on the form panel, so it
+        carries its own surface. Without one it falls below the contrast
+        threshold wherever the image happens to be light.
+        {% endcomment %}
+        <p class="mt-6 text-center">
+          <span class="inline-block rounded-full bg-white/80 px-4 py-1.5 text-sm text-slate-600 shadow-sm ring-1 ring-inset ring-white/60 backdrop-blur">{% block auth_footer %}{% endblock %}</span>
+        </p>
       </div>
     </div>
   </div>

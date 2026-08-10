@@ -154,18 +154,19 @@ the copy.
 </section>
 {% endif %}
 
-<section class="relative mt-12 overflow-hidden border-y border-slate-200 bg-white">
-  <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent"></div>
-  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(50%_50%_at_50%_50%,black,transparent)]"></div>
+<section class="photo-band scrim-canvas mt-12 border-y border-slate-200 bg-white">
+  {% backdrop "facade-grid" %}
+  <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent"></div>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-grid-slate bg-grid [mask-image:radial-gradient(50%_50%_at_50%_50%,black,transparent)]"></div>
 
-  <div class="shell relative py-14 sm:py-16">
+  <div class="shell py-14 sm:py-16">
     <div class="reveal max-w-2xl">
       <p class="eyebrow">Why Mrentals</p>
       <h2 class="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Three things we refuse to leave to chance</h2>
     </div>
 
     <div class="mt-9 grid gap-5 md:grid-cols-3" data-reveal-group>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "map-pin" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Directions, not guesswork</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
@@ -173,7 +174,7 @@ the copy.
           would say it, and back it with a photo of the landmark.
         </p>
       </div>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "shield-check" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Verification, not a badge</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
@@ -181,7 +182,7 @@ the copy.
           submission before a listing can go live.
         </p>
       </div>
-      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+      <div class="group reveal rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur-sm transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
         <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "star" "h-6 w-6" %}</span>
         <h3 class="mt-4 text-lg font-semibold">Reviews that go both ways</h3>
         <p class="mt-2 text-sm leading-relaxed text-slate-600">
@@ -194,13 +195,13 @@ the copy.
 </section>
 
 <section class="shell section">
-  <div class="reveal reveal-scale relative overflow-hidden rounded-4xl bg-ink px-6 py-14 text-center shadow-panel sm:px-12 sm:py-16">
-    <div class="pointer-events-none absolute inset-0 bg-mesh-dark"></div>
-    <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand/25 blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 animate-float-slow rounded-full bg-brand/15 blur-3xl"></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
+  <div class="photo-band scrim-dark reveal reveal-scale rounded-4xl bg-ink px-6 py-14 text-center shadow-panel sm:px-12 sm:py-16">
+    {% backdrop "estate-night" %}
+    <div class="pointer-events-none absolute -right-16 -top-16 -z-10 h-64 w-64 animate-float rounded-full bg-brand/25 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-20 -left-10 -z-10 h-64 w-64 animate-float-slow rounded-full bg-brand/15 blur-3xl"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
 
-    <div class="relative">
+    <div>
       <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Own or manage a house?</h2>
       <p class="mx-auto mt-4 max-w-xl leading-relaxed text-slate-300">
         Get verified once, then post as many houses as you like. Verified listings appear above
