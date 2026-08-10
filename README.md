@@ -128,6 +128,18 @@ bundle, so the build stays pure Python and needs no Node toolchain.
 2. Set `DATABASE_URL` to the Postgres instance's **internal** connection string.
 3. Deploy. The build installs dependencies, runs `collectstatic`, then `migrate`.
 
+`autoDeploy` is on, so every commit to `main` ships. If the service was created
+before that setting existed, Render keeps whatever the dashboard was set to, and
+a merge can land without anything happening. Check **Settings > Build & Deploy >
+Auto-Deploy** on the service, or resync the Blueprint, and use **Manual Deploy**
+to ship the commit that was missed. A failed build behaves the same way from the
+outside, since Render keeps serving the last good version, so read the deploy
+log before assuming the setting is at fault.
+
+To confirm which build is live, compare the hashed stylesheet name in the page
+source against a local `manage.py collectstatic`. The names differ as soon as any
+CSS changes.
+
 If the Postgres instance is shared with another Django project, set
 `DJANGO_DB_SCHEMA` to a name of its own. Two Django projects in one schema would
 write to the same `django_migrations` table and collide on app labels such as
