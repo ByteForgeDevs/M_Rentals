@@ -325,7 +325,9 @@
     content: "";
     @apply pointer-events-none absolute inset-0 -z-10 bg-surface/35;
   }
-  /* Keeps white text readable on a dark photo. */
+  /* Keeps white text readable on a dark photo. Every stop must be non-inverting:
+     the text this guards is always light, so a `brand-N` ramp token would flip to
+     a pale mint in dark mode and drop the bottom-right corner to 1.49:1. */
   .scrim-dark::before {
     content: "";
     @apply pointer-events-none absolute inset-0 -z-10 bg-ink/60;
@@ -333,7 +335,7 @@
   .scrim-dark::after {
     content: "";
     @apply pointer-events-none absolute inset-0 -z-10
-           bg-gradient-to-br from-ink/85 via-ink/55 to-brand-900/70;
+           bg-gradient-to-br from-ink/85 via-ink/55 to-brand-fixed/70;
   }
   /* A photo used as texture rather than as subject, behind a tinted section. */
   .scrim-canvas::before {
