@@ -1,10 +1,9 @@
 {% load humanize ui %}
-<article class="card-interactive group flex flex-col overflow-hidden">
-  <a href="{{ listing.get_absolute_url }}" class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
+<article class="card-interactive group reveal flex flex-col overflow-hidden">
+  <a href="{{ listing.get_absolute_url }}" class="media block aspect-[4/3]">
     {% with photo=listing.cover_photo %}
       {% if photo %}
-        <img src="{{ photo.image.url }}" alt="{{ listing.title }}" loading="lazy" decoding="async"
-             class="h-full w-full object-cover transition duration-500 ease-out-soft group-hover:scale-[1.04]">
+        <img src="{{ photo.image.url }}" alt="{{ listing.title }}" loading="lazy" decoding="async">
       {% else %}
         <span class="flex h-full w-full flex-col items-center justify-center gap-2 text-slate-400">
           {% icon "camera" "h-7 w-7" %}
@@ -14,7 +13,9 @@
     {% endwith %}
 
     {# A soft floor under the badges keeps them readable on any photo. #}
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/25 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/30 to-transparent"></div>
+    {# Deepens on hover, so the card feels like it is being picked up. #}
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
     <div class="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
       {% if listing.is_landlord_verified %}
@@ -30,7 +31,7 @@
     {% endif %}
 
     {% if listing.has_complete_photo_set %}
-      <span class="badge-solid absolute bottom-2.5 left-2.5 opacity-0 transition duration-200 group-hover:opacity-100">
+      <span class="badge-solid absolute bottom-2.5 left-2.5 translate-y-1.5 opacity-0 transition-all duration-300 ease-out-soft group-hover:translate-y-0 group-hover:opacity-100">
         {% icon "camera" "h-3.5 w-3.5" %}Full photo set
       </span>
     {% endif %}
@@ -41,11 +42,11 @@
       <p class="text-lg font-bold tracking-tight text-slate-900">
         KES {{ listing.rent_amount|floatformat:0|intcomma }}<span class="text-sm font-medium text-slate-500">/mo</span>
       </p>
-      <span class="badge-muted shrink-0">{{ listing.bedrooms_label }}</span>
+      <span class="badge-muted shrink-0 transition-colors group-hover:bg-brand-50 group-hover:text-brand-700">{{ listing.bedrooms_label }}</span>
     </div>
 
     <h3 class="mt-1.5 line-clamp-2 text-sm font-semibold leading-snug text-slate-900">
-      <a href="{{ listing.get_absolute_url }}" class="transition hover:text-brand">{{ listing.title }}</a>
+      <a href="{{ listing.get_absolute_url }}" class="transition-colors hover:text-brand">{{ listing.title }}</a>
     </h3>
 
     <p class="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
@@ -60,7 +61,7 @@
     </p>
 
     <div class="mt-auto flex items-center gap-2 border-t border-slate-100 pt-3 text-xs text-slate-500">
-      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-700">{{ listing.landlord.display_initials }}</span>
+      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-700 transition-colors group-hover:bg-brand-100 group-hover:text-brand-800">{{ listing.landlord.display_initials }}</span>
       <span class="truncate">{{ listing.landlord.full_name }}</span>
       {% if listing.landlord_rating %}
         <span class="ml-auto flex shrink-0 items-center gap-1 font-semibold text-slate-700">

@@ -4,19 +4,23 @@
 {% block title %}Saved houses | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="shell py-8">
-  <p class="eyebrow">Your shortlist</p>
-  <h1 class="mt-1.5 text-display-sm">Saved houses</h1>
-  <p class="mt-2 max-w-xl text-slate-600">Compare the landmark photos before you spend fare.</p>
+<section class="page-band">
+  <div class="shell py-8 sm:py-10">
+    <p class="eyebrow animate-fade-in">Your shortlist</p>
+    <h1 class="mt-1.5 animate-rise-in text-display-sm">Saved houses</h1>
+    <p class="mt-2 max-w-xl animate-rise-in text-slate-600">Compare the landmark photos before you spend fare.</p>
+  </div>
+</section>
 
+<div class="shell py-8">
   {% if entries %}
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
       {% for entry in entries %}
         {% include "listings/partials/card.html" with listing=entry.listing %}
       {% endfor %}
     </div>
   {% else %}
-    <div class="card mt-8 px-6 py-14 text-center">
+    <div class="card animate-scale-in px-6 py-14 text-center">
       <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "heart" "h-7 w-7" %}</span>
       <h2 class="mt-5 text-lg font-semibold">Nothing saved yet</h2>
       <p class="mx-auto mt-2 max-w-sm text-sm text-slate-600">Save houses while you browse and they will show up here.</p>

@@ -4,14 +4,18 @@
 {% block title %}Verification | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
-  <p class="eyebrow">Trust and safety</p>
-  <h1 class="mt-1.5 text-display-sm">Verification centre</h1>
-  <p class="mt-2 text-slate-600">
-    A real person on our team checks every ID. This is the whole point of Mrentals.
-  </p>
+<section class="page-band">
+  <div class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
+    <p class="eyebrow animate-fade-in">Trust and safety</p>
+    <h1 class="mt-1.5 animate-rise-in text-display-sm">Verification centre</h1>
+    <p class="mt-2 animate-rise-in text-slate-600">
+      A real person on our team checks every ID. This is the whole point of Mrentals.
+    </p>
+  </div>
+</section>
 
-  <section class="card mt-8 p-6 sm:p-7">
+<div class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+  <section class="card-interactive reveal p-6 sm:p-7">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
         <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "shield-check" "h-5 w-5 text-brand-600" %}Landlord verification</h2>
@@ -47,7 +51,7 @@
     {% endif %}
   </section>
 
-  <section class="card mt-6 p-6 sm:p-7">
+  <section class="card-interactive reveal mt-6 p-6 sm:p-7">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
         <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "users" "h-5 w-5 text-brand-600" %}Tenant verification</h2>
