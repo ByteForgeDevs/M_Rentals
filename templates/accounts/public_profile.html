@@ -17,7 +17,7 @@
       <div class="min-w-0 flex-1">
         <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{{ person.full_name }}</h1>
         <p class="mt-1 text-sm text-slate-500">
-          {{ person.get_role_display }} <span class="text-slate-300">/</span> joined {{ person.date_joined|date:"F Y" }}
+          {{ person.get_role_display }} <span class="text-slate-500">/</span> joined {{ person.date_joined|date:"F Y" }}
         </p>
         <div class="mt-3 flex flex-wrap gap-2">
           {% if person.is_verified_landlord %}<span class="badge-verified">{% icon "shield-check" "h-3.5 w-3.5" %}Verified landlord</span>{% endif %}
@@ -71,11 +71,11 @@
           {% for review in landlord_reviews %}
             <li class="card p-5">
               <div class="flex items-center justify-between gap-3">
-                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
+                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand-700">{{ review.author.full_name }}</a>
                 <span class="badge-verified">{% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ review.overall_rating|floatformat:1 }}/5</span>
               </div>
               <p class="mt-1 text-xs text-slate-500">
-                {{ review.tenancy.listing.title }} <span class="text-slate-300">/</span> {{ review.created_at|date:"M Y" }}
+                {{ review.tenancy.listing.title }} <span class="text-slate-500">/</span> {{ review.created_at|date:"M Y" }}
               </p>
               {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
               <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
@@ -98,11 +98,11 @@
           {% for review in tenant_reviews %}
             <li class="card p-5">
               <div class="flex items-center justify-between gap-3">
-                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand">{{ review.author.full_name }}</a>
+                <a href="{% url 'accounts:public_profile' review.author.pk %}" class="text-sm font-semibold hover:text-brand-700">{{ review.author.full_name }}</a>
                 <span class="badge-verified">{% icon "star" "h-3.5 w-3.5 text-amber-400" %}{{ review.overall_rating|floatformat:1 }}/5</span>
               </div>
               <p class="mt-1 text-xs text-slate-500">
-                {{ review.tenancy.listing.title }} <span class="text-slate-300">/</span> {{ review.created_at|date:"M Y" }}
+                {{ review.tenancy.listing.title }} <span class="text-slate-500">/</span> {{ review.created_at|date:"M Y" }}
               </p>
               {% if review.comment %}<p class="mt-3 text-sm text-slate-700">{{ review.comment|linebreaksbr }}</p>{% endif %}
               <dl class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">

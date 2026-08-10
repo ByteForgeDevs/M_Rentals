@@ -59,6 +59,13 @@
 
     --surface: 255 255 255;
     --ink: 0 0 0;
+    /* White clears 4.5:1 from brand-600 down (4.99:1), which is why solid brand
+       fills start at 600 rather than at the 500 accent (3.40:1). */
+    --on-brand: 255 255 255;
+    /* Form control boundaries are the only thing that says "this is an input",
+       so WCAG 1.4.11 wants 3:1 against the surface. The slate-300 hairline this
+       replaced measured 1.48:1. This is 3.27:1 on a card and 3.13:1 on canvas. */
+    --field-border: 130 143 166;
 
     --shadow: 15 23 42;
     --mesh: 27 157 128;
@@ -116,6 +123,11 @@
 
     --surface: 23 26 32;
     --ink: 5 7 10;
+    /* The lifted greens are bright, so a dark mark is what reads on them:
+       near-black on brand-600 is 9.39:1 where white would be 2.15:1. */
+    --on-brand: 5 12 10;
+    /* 3.37:1 against the dark card surface, 3.65:1 against the canvas. */
+    --field-border: 100 109 131;
 
     /* Elevation on a dark surface comes from a blacker, deeper shadow. */
     --shadow: 0 0 0;
@@ -192,16 +204,20 @@
            active:scale-[0.98]
            disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100;
   }
+  /* Solid brand fills start at 600, not at the 500 accent. White on 500 is
+     3.40:1, which misses AA for button text; 600 measures 4.99:1. Hover and
+     active step further along the ramp, so every state gains contrast rather
+     than losing it. */
   .btn-primary {
-    @apply btn bg-brand text-white shadow-sm
-           hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-glow
-           active:translate-y-0 active:bg-brand-700;
+    @apply btn bg-brand-600 text-on-brand shadow-sm
+           hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-glow
+           active:translate-y-0 active:bg-brand-800;
   }
   .btn-dark {
     @apply btn bg-ink text-white shadow-sm hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lift active:translate-y-0;
   }
   .btn-outline {
-    @apply btn border border-slate-300 bg-surface text-slate-800 shadow-sm
+    @apply btn border border-field bg-surface text-slate-800 shadow-sm
            hover:-translate-y-0.5 hover:border-brand hover:bg-brand-50 hover:text-brand-700 hover:shadow-card
            active:translate-y-0;
   }
@@ -250,10 +266,12 @@
            hover:bg-slate-100 hover:text-slate-900 active:scale-95;
   }
   /* The account avatar. A gradient gives it presence at 32px, where a flat
-     fill just reads as a grey dot. */
+     fill just reads as a grey dot. It starts at 600 so even the gradient's
+     lightest point carries the initials at 4.99:1; starting at 400, as it
+     once did, left them at 2.47:1. */
   .avatar {
     @apply flex shrink-0 items-center justify-center rounded-full
-           bg-gradient-to-br from-brand-400 to-brand-700 text-xs font-bold text-white
+           bg-gradient-to-br from-brand-600 to-brand-900 text-xs font-bold text-on-brand
            ring-2 ring-surface;
   }
 
@@ -402,20 +420,29 @@
     @apply mt-1 flex items-start gap-1 text-xs font-medium text-red-600;
   }
   .field-input {
-    @apply w-full rounded-lg border-slate-300 bg-surface text-slate-900 shadow-sm transition
-           placeholder:text-slate-400 hover:border-slate-400
+    @apply w-full rounded-lg border-field bg-surface text-slate-900 shadow-sm transition
+           placeholder:text-slate-500 hover:border-slate-500
            focus:border-brand focus:ring-2 focus:ring-brand/30;
   }
   /* Radio groups read as choices, not as form plumbing, so they get a target
      the size of a card rather than the size of a dot. */
   .radio-card {
-    @apply flex cursor-pointer items-center gap-2.5 rounded-lg border border-slate-300 bg-surface
+    @apply flex cursor-pointer items-center gap-2.5 rounded-lg border border-field bg-surface
            px-3.5 py-3 transition-all duration-200 ease-out-soft
            hover:-translate-y-0.5 hover:border-brand hover:bg-brand-50/50 hover:shadow-sm
            has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:ring-1 has-[:checked]:ring-brand;
   }
   .radio-card input[type="radio"] {
-    @apply h-4 w-4 border-slate-300 text-brand focus:ring-brand/40;
+    @apply h-4 w-4 border-field text-brand-600 focus:ring-brand/40;
+  }
+  /* The forms plugin hardcodes a white tick into the checked background image.
+     That is right on the light-mode green, but the dark-mode green is lifted,
+     so a white tick there measures 2.15:1. Restate the marks in `on-brand`. */
+  .dark [type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23050C0A' viewBox='0 0 16 16'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0'/%3E%3C/svg%3E");
+  }
+  .dark [type="radio"]:checked {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23050C0A' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3C/svg%3E");
   }
 
   /* An icon in a tinted tile. Used to lead almost every section on the site. */
@@ -428,7 +455,7 @@
   }
 
   .wordmark {
-    @apply font-bold uppercase tracking-wordmark text-brand;
+    @apply font-bold uppercase tracking-wordmark text-brand-700;
   }
   .prose-tight :where(p) {
     @apply text-slate-600;
@@ -445,7 +472,7 @@
     @apply text-xs font-semibold uppercase tracking-[0.14em] text-slate-700;
   }
   .link-quiet {
-    @apply font-medium text-slate-600 underline-offset-4 hover:text-brand hover:underline;
+    @apply font-medium text-slate-600 underline-offset-4 hover:text-brand-700 hover:underline;
   }
   /* An arrow that leans forward on hover, used on every "read more" style link. */
   .link-arrow {

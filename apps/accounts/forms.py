@@ -8,14 +8,14 @@ from .models import User
 from .validators import normalize_phone, validate_kenyan_phone
 
 TEXT_INPUT_CLASS = (
-    "w-full min-h-[44px] rounded-lg border border-slate-300 bg-surface px-3 py-2.5 "
-    "text-slate-900 shadow-sm transition duration-150 placeholder:text-slate-400 "
+    "w-full min-h-[44px] rounded-lg border border-field bg-surface px-3 py-2.5 "
+    "text-slate-900 shadow-sm transition duration-150 placeholder:text-slate-500 "
     "hover:border-slate-400 focus:border-brand focus:outline-none focus:ring-2 "
     "focus:ring-brand/30"
 )
 
 CHECKBOX_CLASS = (
-    "mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-brand transition "
+    "mt-0.5 h-5 w-5 shrink-0 rounded border-field text-brand-600 transition "
     "focus:ring-2 focus:ring-brand/40 focus:ring-offset-0"
 )
 
@@ -37,8 +37,8 @@ class StyledFormMixin:
                 widget.attrs.setdefault(
                     "class",
                     "w-full text-sm text-slate-600 file:mr-3 file:cursor-pointer "
-                    "file:rounded-lg file:border-0 file:bg-brand file:px-4 file:py-2 "
-                    "file:font-semibold file:text-white hover:file:bg-brand-600",
+                    "file:rounded-lg file:border-0 file:bg-brand-600 file:px-4 file:py-2 "
+                    "file:font-semibold file:text-on-brand hover:file:bg-brand-700",
                 )
                 continue
             existing = widget.attrs.get("class", "")
