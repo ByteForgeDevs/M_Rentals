@@ -3,15 +3,19 @@
 {% block title %}{% if is_create %}Post a house{% else %}Edit listing{% endif %} | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-4xl px-4 py-8 pb-28 sm:px-6 lg:pb-10">
-  <p class="eyebrow">{% if is_create %}New listing{% else %}Editing{% endif %}</p>
-  <h1 class="mt-1.5 text-display-sm">{% if is_create %}Post a house{% else %}Edit listing{% endif %}</h1>
-  <p class="mt-2 max-w-xl text-slate-600">
-    Directions and a complete photo set are required. That is what makes a listing worth trusting.
-  </p>
+<section class="page-band">
+  <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+    <p class="eyebrow animate-fade-in">{% if is_create %}New listing{% else %}Editing{% endif %}</p>
+    <h1 class="mt-1.5 animate-rise-in text-display-sm">{% if is_create %}Post a house{% else %}Edit listing{% endif %}</h1>
+    <p class="mt-2 max-w-xl animate-rise-in text-slate-600">
+      Directions and a complete photo set are required. That is what makes a listing worth trusting.
+    </p>
+  </div>
+</section>
 
+<div class="mx-auto w-full max-w-4xl px-4 py-8 pb-28 sm:px-6 lg:pb-10">
   {% if not user.is_verified_landlord %}
-    <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800">
+    <div class="mb-8 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800">
       {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
       <span>
         You can save this listing now, but it cannot go live until your landlord verification is approved.
@@ -20,7 +24,7 @@
     </div>
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data" class="mt-8 space-y-8" novalidate>
+  <form method="post" enctype="multipart/form-data" class="space-y-8" novalidate>
     {% csrf_token %}
 
     {% if form.non_field_errors %}
@@ -30,7 +34,7 @@
       </div>
     {% endif %}
 
-    <section class="card p-6 sm:p-7">
+    <section class="card reveal p-6 sm:p-7">
       <h2 class="flex items-center gap-2.5 text-lg font-semibold">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-700">{% icon "home" "h-4 w-4" %}</span>The house
       </h2>
@@ -50,7 +54,7 @@
       </div>
     </section>
 
-    <section class="card p-6 sm:p-7">
+    <section class="card reveal p-6 sm:p-7">
       <h2 class="flex items-center gap-2.5 text-lg font-semibold">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-700">{% icon "map-pin" "h-4 w-4" %}</span>Where it is
       </h2>
@@ -77,7 +81,7 @@
       </div>
     </section>
 
-    <section class="card p-6 sm:p-7">
+    <section class="card reveal p-6 sm:p-7">
       <h2 class="flex items-center gap-2.5 text-lg font-semibold">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-700">{% icon "camera" "h-4 w-4" %}</span>Photos
       </h2>
@@ -124,7 +128,7 @@
       </div>
     </section>
 
-    <section class="card p-6 sm:p-7">
+    <section class="card reveal p-6 sm:p-7">
       <h2 class="flex items-center gap-2.5 text-lg font-semibold">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-700">{% icon "sparkle" "h-4 w-4" %}</span>Extras
       </h2>

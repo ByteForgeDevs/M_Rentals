@@ -4,27 +4,31 @@
 {% block title %}Dashboard | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="shell py-8">
-  <div class="flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <p class="eyebrow">Using Mrentals as a {{ user.get_role_display|lower }}</p>
-      <h1 class="mt-1.5 text-display-sm">Habari, {{ user.full_name.split.0 }}</h1>
+<section class="page-band">
+  <div class="shell py-8 sm:py-10">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow animate-fade-in">Using Mrentals as a {{ user.get_role_display|lower }}</p>
+        <h1 class="mt-1.5 animate-rise-in text-display-sm">Habari, {{ user.full_name.split.0 }}</h1>
+      </div>
+      {% if user.is_landlord %}
+        <a href="{% url 'listings:create' %}" class="btn-primary btn-lg btn-touch animate-fade-in">{% icon "home" "h-4 w-4" %}Post a house</a>
+      {% else %}
+        <a href="{% url 'listings:search' %}" class="btn-primary btn-lg btn-touch animate-fade-in">{% icon "search" "h-4 w-4" %}Find a house</a>
+      {% endif %}
     </div>
-    {% if user.is_landlord %}
-      <a href="{% url 'listings:create' %}" class="btn-primary btn-lg btn-touch">{% icon "home" "h-4 w-4" %}Post a house</a>
-    {% else %}
-      <a href="{% url 'listings:search' %}" class="btn-primary btn-lg btn-touch">{% icon "search" "h-4 w-4" %}Find a house</a>
-    {% endif %}
   </div>
+</section>
 
+<div class="shell py-8">
   {% if verification %}
     {% if verification.is_pending %}
-      <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800">
+      <div class="mb-8 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm text-amber-800">
         {% icon "clock" "h-4 w-4 mt-0.5 shrink-0" %}
         <span>Your verification is with our review team. We usually get through them within 48 hours.</span>
       </div>
     {% elif verification.is_rejected %}
-      <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-800">
+      <div class="mb-8 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-800">
         {% icon "alert" "h-4 w-4 mt-0.5 shrink-0" %}
         <span>
           Your verification was rejected. {{ verification.reviewer_notes }}
@@ -33,7 +37,7 @@
       </div>
     {% endif %}
   {% else %}
-    <div class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50 px-5 py-4">
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50 px-5 py-4">
       <div class="flex items-start gap-2.5 text-sm text-brand-800">
         {% icon "shield-check" "h-4.5 w-4.5 mt-px shrink-0" %}
         <span>
@@ -50,20 +54,20 @@
   {% endif %}
 
   {% if user.is_landlord %}
-    <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <div class="card p-5">
+    <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4" data-reveal-group>
+      <div class="card reveal group p-5 transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:border-brand-200 hover:shadow-float">
         <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "bolt" "h-4 w-4 text-brand-500" %}Live</dt>
         <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ listing_counts.published }}</dd>
       </div>
-      <div class="card p-5">
+      <div class="card reveal group p-5 transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:border-brand-200 hover:shadow-float">
         <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "info" "h-4 w-4 text-slate-400" %}Drafts</dt>
         <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ listing_counts.draft }}</dd>
       </div>
-      <div class="card p-5">
+      <div class="card reveal group p-5 transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:border-brand-200 hover:shadow-float">
         <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "users" "h-4 w-4 text-slate-400" %}Total views</dt>
         <dd class="mt-1.5 text-3xl font-bold tracking-tight">{{ total_views|intcomma }}</dd>
       </div>
-      <div class="card p-5">
+      <div class="card reveal group p-5 transition-all duration-300 ease-out-soft hover:-translate-y-1 hover:border-brand-200 hover:shadow-float">
         <dt class="flex items-center gap-1.5 text-sm text-slate-500">{% icon "star" "h-4 w-4 text-amber-400" %}Your rating</dt>
         <dd class="mt-1.5 text-3xl font-bold tracking-tight">{% if rating.count %}{{ rating.avg|floatformat:1 }}{% else %}<span class="text-lg font-medium text-slate-400">Not rated</span>{% endif %}</dd>
         <dd class="mt-0.5 text-xs text-slate-500">{{ rating.count }} review{{ rating.count|pluralize }}</dd>
@@ -73,18 +77,18 @@
     <section class="mt-10">
       <h2 class="text-xl font-bold tracking-tight">Your listings</h2>
       {% if listings %}
-        <ul class="mt-4 space-y-3">
+        <ul class="mt-4 space-y-3" data-reveal-group>
           {% for listing in listings %}
-            <li class="card flex flex-wrap items-center gap-4 p-4 transition hover:shadow-lift">
+            <li class="card-interactive reveal group flex flex-wrap items-center gap-4 p-4">
               {% if listing.cover_photo %}
-                <img src="{{ listing.cover_photo.image.url }}" alt="" loading="lazy" class="h-20 w-28 shrink-0 rounded-lg object-cover">
+                <div class="media h-20 w-28 shrink-0 rounded-lg"><img src="{{ listing.cover_photo.image.url }}" alt="" loading="lazy" class="h-full w-full object-cover"></div>
               {% else %}
                 <div class="flex h-20 w-28 shrink-0 flex-col items-center justify-center gap-1 rounded-lg bg-canvas-100 text-xs text-slate-400">
                   {% icon "camera" "h-5 w-5" %}No photo
                 </div>
               {% endif %}
               <div class="min-w-0 flex-1">
-                <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold hover:text-brand">{{ listing.title }}</a>
+                <a href="{% url 'listings:manage' listing.slug %}" class="font-semibold transition-colors group-hover:text-brand">{{ listing.title }}</a>
                 <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
                   <span>{{ listing.location_summary }}</span>
                   <span class="text-slate-300">/</span>
@@ -105,7 +109,7 @@
           {% endfor %}
         </ul>
       {% else %}
-        <div class="card mt-4 px-6 py-12 text-center">
+        <div class="card animate-scale-in mt-4 px-6 py-12 text-center">
           <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "home" "h-7 w-7" %}</span>
           <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">No listings yet. Post your first house. It takes about five minutes.</p>
           <a href="{% url 'listings:create' %}" class="btn-primary btn-touch mt-5">Post a house</a>
@@ -120,13 +124,13 @@
         {% if saved %}<a href="{% url 'listings:saved' %}" class="link-quiet text-sm">See all saved</a>{% endif %}
       </div>
       {% if saved %}
-        <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
           {% for entry in saved %}
             {% include "listings/partials/card.html" with listing=entry.listing %}
           {% endfor %}
         </div>
       {% else %}
-        <div class="card mt-4 px-6 py-12 text-center">
+        <div class="card animate-scale-in mt-4 px-6 py-12 text-center">
           <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "heart" "h-7 w-7" %}</span>
           <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">Nothing saved yet. Save houses as you browse to compare them later.</p>
           <a href="{% url 'listings:search' %}" class="btn-primary btn-touch mt-5">Browse houses</a>
@@ -137,7 +141,7 @@
     {% if recommended %}
       <section class="mt-12">
         <h2 class="text-xl font-bold tracking-tight">From verified landlords{% if user.preferred_area %} near {{ user.preferred_area }}{% endif %}</h2>
-        <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
           {% for listing in recommended %}
             {% include "listings/partials/card.html" with listing=listing %}
           {% endfor %}
@@ -149,7 +153,7 @@
   {% if pending_reviews_as_tenant or pending_reviews_as_landlord %}
     <section class="mt-12">
       <h2 class="text-xl font-bold tracking-tight">Reviews waiting on you</h2>
-      <ul class="mt-4 space-y-3">
+      <ul class="mt-4 space-y-3" data-reveal-group>
         {% for tenancy in pending_reviews_as_tenant %}
           <li class="card flex flex-wrap items-center justify-between gap-4 p-5">
             <div class="flex items-center gap-3">

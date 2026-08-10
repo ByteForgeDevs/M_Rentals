@@ -5,11 +5,15 @@
 {% block meta_description %}Search verified long term rentals across Kenya by price, area, bedrooms and landmark.{% endblock %}
 
 {% block content %}
-<div class="shell py-8">
-  <h1 class="text-display-sm">Find a house</h1>
-  <p class="mt-2 max-w-xl text-slate-600">Filter by what you can afford, then check the landmark photos before you travel.</p>
+<section class="page-band">
+  <div class="shell py-8 sm:py-10">
+    <h1 class="animate-rise-in text-display-sm">Find a house</h1>
+    <p class="mt-2 max-w-xl animate-rise-in text-slate-600">Filter by what you can afford, then check the landmark photos before you travel.</p>
+  </div>
+</section>
 
-  <div class="mt-7 grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)]">
+<div class="shell py-8">
+  <div class="grid gap-8 lg:grid-cols-[290px_minmax(0,1fr)]">
     {% comment %}
     One form serves both layouts. On desktop it is a sticky sidebar. On a phone
     the same markup becomes a bottom sheet, toggled with a checkbox so the

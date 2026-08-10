@@ -27,7 +27,7 @@
 {% endif %}
 
 {% if page_obj.object_list %}
-  <div class="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+  <div class="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3" data-reveal-group>
     {% for listing in page_obj %}{% include "listings/partials/card.html" %}{% endfor %}
   </div>
 

@@ -4,19 +4,23 @@
 {% block title %}Tenancies &amp; reviews | {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
-  <p class="eyebrow">Your record</p>
-  <h1 class="mt-1.5 text-display-sm">Tenancies and reviews</h1>
-  <p class="mt-2 max-w-xl text-slate-600">
-    Reviews on Mrentals only come from recorded tenancies. No tenancy, no review.
-  </p>
+<section class="page-band">
+  <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
+    <p class="eyebrow animate-fade-in">Your record</p>
+    <h1 class="mt-1.5 animate-rise-in text-display-sm">Tenancies and reviews</h1>
+    <p class="mt-2 max-w-xl animate-rise-in text-slate-600">
+      Reviews on Mrentals only come from recorded tenancies. No tenancy, no review.
+    </p>
+  </div>
+</section>
 
-  <section class="mt-10">
+<div class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
+  <section>
     <h2 class="text-xl font-bold tracking-tight">Places you rented</h2>
     {% if as_tenant %}
-      <ul class="mt-4 space-y-3">
+      <ul class="mt-4 space-y-3" data-reveal-group>
         {% for tenancy in as_tenant %}
-          <li class="card flex flex-wrap items-center justify-between gap-4 p-5 transition hover:shadow-lift">
+          <li class="card-interactive reveal flex flex-wrap items-center justify-between gap-4 p-5">
             <div class="min-w-0">
               <a href="{{ tenancy.listing.get_absolute_url }}" class="font-semibold hover:text-brand">{{ tenancy.listing.title }}</a>
               <p class="mt-1 text-sm text-slate-500">
@@ -34,7 +38,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      <div class="card mt-4 px-6 py-10 text-center">
+      <div class="card animate-scale-in mt-4 px-6 py-10 text-center">
         <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "key" "h-6 w-6" %}</span>
         <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">
           No tenancies yet. Your landlord records the tenancy once you move in, and that unlocks your review.
@@ -46,9 +50,9 @@
   <section class="mt-12">
     <h2 class="text-xl font-bold tracking-tight">Your tenants</h2>
     {% if as_landlord %}
-      <ul class="mt-4 space-y-3">
+      <ul class="mt-4 space-y-3" data-reveal-group>
         {% for tenancy in as_landlord %}
-          <li class="card flex flex-wrap items-center justify-between gap-4 p-5 transition hover:shadow-lift">
+          <li class="card-interactive reveal flex flex-wrap items-center justify-between gap-4 p-5">
             <div class="min-w-0">
               <a href="{% url 'accounts:public_profile' tenancy.tenant.pk %}" class="font-semibold hover:text-brand">{{ tenancy.tenant.full_name }}</a>
               <p class="mt-1 text-sm text-slate-500">
@@ -72,7 +76,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      <div class="card mt-4 px-6 py-10 text-center">
+      <div class="card animate-scale-in mt-4 px-6 py-10 text-center">
         <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-canvas-100 text-slate-400">{% icon "users" "h-6 w-6" %}</span>
         <p class="mx-auto mt-4 max-w-sm text-sm text-slate-600">
           No tenancies recorded. Open a listing and record who rented it.

@@ -1,8 +1,11 @@
 {% load static ui %}
 {% with ns=request.resolver_match.namespace url_name=request.resolver_match.url_name %}
-<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+<header data-site-header
+        class="sticky top-0 z-40 border-b border-transparent bg-white/80 backdrop-blur-md
+               transition-all duration-300 ease-out-soft
+               [&.is-scrolled]:border-slate-200 [&.is-scrolled]:bg-white/95 [&.is-scrolled]:shadow-card">
   <nav class="shell flex items-center gap-3 py-3" aria-label="Main">
-    <a href="{% url 'pages:home' %}" class="flex shrink-0 items-center rounded-lg" aria-label="Mrentals home">
+    <a href="{% url 'pages:home' %}" class="flex shrink-0 items-center rounded-lg transition-transform duration-200 ease-spring hover:scale-105" aria-label="Mrentals home">
       <img src="{% static 'img/logo-lockup.svg' %}" alt="Mrentals" class="h-10 w-auto" width="122" height="98">
     </a>
 

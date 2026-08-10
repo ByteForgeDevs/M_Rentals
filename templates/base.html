@@ -8,7 +8,14 @@
   <meta name="theme-color" content="#1B9D80">
   <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% comment %}
+  Sets the flag that arms the scroll reveal styles. It runs inline and before
+  first paint so revealable content never flashes in and then hides itself. A
+  browser with JavaScript off never gets the class, so it never hides anything.
+  {% endcomment %}
+  <script>document.documentElement.classList.add("js");</script>
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/motion.js' %}" defer></script>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="flex min-h-full flex-col bg-canvas-50">

@@ -6,28 +6,46 @@
 {% block content %}
 {% comment %}
 Hero. The headline gets a wider column than the proof panel, because a long
-sentence set in display type needs the room to stay on three lines.
+sentence set in display type needs the room to stay on three lines. The washes
+behind it drift slowly, which gives the surface life without competing with
+the copy.
 {% endcomment %}
 <section class="relative overflow-hidden border-b border-slate-200 bg-white">
-  <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-50 blur-3xl"></div>
-  <div class="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-brand-50/60 blur-3xl"></div>
+  <div class="pointer-events-none absolute inset-0 bg-mesh-brand"></div>
+  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent)]"></div>
+  <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 animate-float rounded-full bg-brand-200/40 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 animate-float-slow rounded-full bg-brand-100/60 blur-3xl"></div>
 
   <div class="shell relative grid items-center gap-12 py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-20">
     <div>
-      <span class="badge-verified">{% icon "shield-check" "h-4 w-4" %}{{ SITE_TAGLINE }}</span>
+      <span class="badge-verified animate-rise-in shadow-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-brand-400"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-brand"></span>
+        </span>
+        {{ SITE_TAGLINE }}
+      </span>
 
-      <h1 class="mt-5 text-display-sm text-slate-900 sm:text-display lg:text-display-lg">
-        Find a house you can actually find, from a landlord you can actually trust.
+      <h1 class="mt-5 animate-rise-in text-display-sm text-slate-900 sm:text-display lg:text-display-lg">
+        Find a house you can actually find, from a landlord you can
+        <span class="relative whitespace-nowrap text-brand-600">
+          actually trust.
+          {# A hand-drawn underline is warmer than a flat highlight block. #}
+          <svg class="absolute -bottom-1 left-0 h-3 w-full text-brand-300" viewBox="0 0 300 12" fill="none" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 8.5C60 3.5 140 2 298 6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </span>
       </h1>
 
-      <p class="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+      <p class="mt-6 max-w-xl animate-rise-in text-lg leading-relaxed text-slate-600">
         Map pins fail for new buildings, and "trusted agent" is just a label. Every Mrentals
         listing carries a full photo set and written directions, and every landlord passes ID
         verification before their house goes live.
       </p>
 
       <form action="{% url 'listings:search' %}" method="get"
-            class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-2 sm:shadow-card">
+            class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white/90 sm:p-2 sm:shadow-float sm:backdrop-blur
+                   sm:transition-shadow sm:duration-300 sm:focus-within:shadow-glow-lg">
         <label class="sr-only" for="hero-q">Search area or landmark</label>
         <div class="relative flex-1">
           <span class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
@@ -36,33 +54,36 @@ sentence set in display type needs the room to stay on three lines.
           <input id="hero-q" name="q" type="search" placeholder="Try Ruaka, Quickmart or Nyali"
                  class="w-full rounded-xl border-slate-300 py-3 pl-11 pr-4 text-slate-900 shadow-sm transition
                         placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/30
-                        sm:border-transparent sm:shadow-none sm:focus:ring-0">
+                        sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus:ring-0">
         </div>
         <button type="submit" class="btn-primary btn-lg btn-touch shrink-0 sm:rounded-xl">
           Search houses
         </button>
       </form>
 
-      <dl class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-slate-100 pt-6">
-        <div>
+      <dl class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-slate-200/80 pt-6" data-reveal-group>
+        <div class="reveal">
           <dt class="eyebrow">Live listings</dt>
-          <dd class="mt-1 text-2xl font-bold tracking-tight text-slate-900">{{ stats.listings|intcomma }}</dd>
+          <dd class="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{{ stats.listings|intcomma }}</dd>
         </div>
-        <div>
+        <div class="reveal">
           <dt class="eyebrow">Verified landlords</dt>
-          <dd class="mt-1 text-2xl font-bold tracking-tight text-brand">{{ stats.verified_landlords|intcomma }}</dd>
+          <dd class="mt-1 text-2xl font-bold tracking-tight text-brand sm:text-3xl">{{ stats.verified_landlords|intcomma }}</dd>
         </div>
-        <div>
+        <div class="reveal">
           <dt class="eyebrow">Tenant reviews</dt>
-          <dd class="mt-1 text-2xl font-bold tracking-tight text-slate-900">{{ stats.reviews|intcomma }}</dd>
+          <dd class="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{{ stats.reviews|intcomma }}</dd>
         </div>
       </dl>
     </div>
 
     <div class="relative lg:pl-4">
-      <div class="panel p-6 sm:p-7">
+      {# A faint second card behind the panel suggests a stack of listings. #}
+      <div class="pointer-events-none absolute -right-3 -top-3 hidden h-full w-full rounded-2xl border border-brand-200/60 bg-brand-50/40 lg:block"></div>
+
+      <div class="panel-float group relative animate-scale-in p-6 sm:p-7">
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+          <span class="icon-tile icon-tile-hover h-11 w-11">
             {% icon "camera" "h-6 w-6" %}
           </span>
           <h2 class="text-lg font-semibold">What every listing must carry</h2>
@@ -70,25 +91,25 @@ sentence set in display type needs the room to stay on three lines.
 
         <ul class="mt-5 space-y-4 text-sm text-slate-700">
           <li class="flex gap-3">
-            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
             Exterior, entrance, room and meter photos, not one flattering angle.
           </li>
           <li class="flex gap-3">
-            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
             A photo of the nearest landmark, so you know the place before you spend fare.
           </li>
           <li class="flex gap-3">
-            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
             Written directions the way people actually navigate.
           </li>
           <li class="flex gap-3">
-            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700">{% icon "check" "h-3.5 w-3.5" "2.4" %}</span>
             A landlord who submitted a national ID and proof they control the property.
           </li>
         </ul>
 
-        <a href="{% url 'pages:how_it_works' %}" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:gap-2.5 hover:text-brand-800">
-          See how verification works {% icon "arrow-right" "h-4 w-4 transition-all" %}
+        <a href="{% url 'pages:how_it_works' %}" class="link-arrow mt-6 text-sm">
+          See how verification works {% icon "arrow-right" "h-4 w-4" %}
         </a>
       </div>
     </div>
@@ -98,16 +119,16 @@ sentence set in display type needs the room to stay on three lines.
 {% if featured %}
 <section class="shell section">
   <div class="flex items-end justify-between gap-4">
-    <div>
+    <div class="reveal">
       <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Houses from verified landlords</h2>
       <p class="mt-1.5 text-sm text-slate-600">Every one of these has a complete photo set and a verified owner.</p>
     </div>
-    <a href="{% url 'listings:search' %}?verified_only=on" class="btn-outline hidden shrink-0 sm:inline-flex">
+    <a href="{% url 'listings:search' %}?verified_only=on" class="btn-outline reveal hidden shrink-0 sm:inline-flex">
       See all {% icon "arrow-right" "h-4 w-4" %}
     </a>
   </div>
 
-  <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
     {% for listing in featured %}{% include "listings/partials/card.html" %}{% endfor %}
   </div>
 
@@ -119,11 +140,12 @@ sentence set in display type needs the room to stay on three lines.
 
 {% if areas %}
 <section class="shell pb-4">
-  <h2 class="text-xl font-bold tracking-tight">Where people are renting</h2>
-  <div class="mt-4 flex flex-wrap gap-2">
+  <h2 class="reveal text-xl font-bold tracking-tight">Where people are renting</h2>
+  <p class="reveal mt-1.5 text-sm text-slate-600">Jump straight to an area people are already moving into.</p>
+  <div class="mt-4 flex flex-wrap gap-2" data-reveal-group>
     {% for area in areas %}
-      <a href="{% url 'listings:search' %}?q={{ area.area|urlencode }}" class="chip py-2">
-        {% icon "map-pin" "h-3.5 w-3.5 text-slate-400" %}
+      <a href="{% url 'listings:search' %}?q={{ area.area|urlencode }}" class="chip reveal reveal-fade py-2">
+        {% icon "map-pin" "h-3.5 w-3.5 text-brand-500" %}
         {{ area.area }}, {{ area.county }}
         <span class="rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500">{{ area.count }}</span>
       </a>
@@ -132,39 +154,51 @@ sentence set in display type needs the room to stay on three lines.
 </section>
 {% endif %}
 
-<section class="mt-12 border-y border-slate-200 bg-white">
-  <div class="shell grid gap-10 py-14 md:grid-cols-3 sm:py-16">
-    <div>
-      <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "map-pin" "h-6 w-6" %}</span>
-      <h3 class="mt-4 text-lg font-semibold">Directions, not guesswork</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600">
-        New estates rarely have accurate pins. Landlords write the route the way a boda rider
-        would say it, and back it with a photo of the landmark.
-      </p>
+<section class="relative mt-12 overflow-hidden border-y border-slate-200 bg-white">
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent"></div>
+  <div class="pointer-events-none absolute inset-0 bg-grid-slate bg-grid [mask-image:radial-gradient(50%_50%_at_50%_50%,black,transparent)]"></div>
+
+  <div class="shell relative py-14 sm:py-16">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow">Why Mrentals</p>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Three things we refuse to leave to chance</h2>
     </div>
-    <div>
-      <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "shield-check" "h-6 w-6" %}</span>
-      <h3 class="mt-4 text-lg font-semibold">Verification, not a badge</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600">
-        National ID plus a title deed, management letter or a video call. A human reviews every
-        submission before a listing can go live.
-      </p>
-    </div>
-    <div>
-      <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">{% icon "star" "h-6 w-6" %}</span>
-      <h3 class="mt-4 text-lg font-semibold">Reviews that go both ways</h3>
-      <p class="mt-2 text-sm leading-relaxed text-slate-600">
-        Tenants rate landlords on repairs, deposits and honesty. Landlords rate tenants on
-        payment. Both are tied to a confirmed tenancy.
-      </p>
+
+    <div class="mt-9 grid gap-5 md:grid-cols-3" data-reveal-group>
+      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+        <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "map-pin" "h-6 w-6" %}</span>
+        <h3 class="mt-4 text-lg font-semibold">Directions, not guesswork</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          New estates rarely have accurate pins. Landlords write the route the way a boda rider
+          would say it, and back it with a photo of the landmark.
+        </p>
+      </div>
+      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+        <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "shield-check" "h-6 w-6" %}</span>
+        <h3 class="mt-4 text-lg font-semibold">Verification, not a badge</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          National ID plus a title deed, management letter or a video call. A human reviews every
+          submission before a listing can go live.
+        </p>
+      </div>
+      <div class="group reveal rounded-2xl border border-slate-200 bg-canvas-50/70 p-6 transition-all duration-300 ease-out-soft hover:-translate-y-1.5 hover:border-brand-200 hover:bg-white hover:shadow-float">
+        <span class="icon-tile icon-tile-hover h-12 w-12">{% icon "star" "h-6 w-6" %}</span>
+        <h3 class="mt-4 text-lg font-semibold">Reviews that go both ways</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+          Tenants rate landlords on repairs, deposits and honesty. Landlords rate tenants on
+          payment. Both are tied to a confirmed tenancy.
+        </p>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="shell section">
-  <div class="relative overflow-hidden rounded-4xl bg-ink px-6 py-14 text-center sm:px-12">
-    <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-brand/20 blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-brand/10 blur-3xl"></div>
+  <div class="reveal reveal-scale relative overflow-hidden rounded-4xl bg-ink px-6 py-14 text-center shadow-panel sm:px-12 sm:py-16">
+    <div class="pointer-events-none absolute inset-0 bg-mesh-dark"></div>
+    <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand/25 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 animate-float-slow rounded-full bg-brand/15 blur-3xl"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
 
     <div class="relative">
       <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Own or manage a house?</h2>
@@ -175,7 +209,7 @@ sentence set in display type needs the room to stay on three lines.
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
         <a href="{% url 'accounts:signup' %}" class="btn-primary btn-lg btn-touch">Create a landlord account</a>
         <a href="{% url 'pages:how_it_works' %}"
-           class="btn btn-lg btn-touch border border-white/25 text-white hover:bg-white/10">See how verification works</a>
+           class="btn btn-lg btn-touch border border-white/25 text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10">See how verification works</a>
       </div>
     </div>
   </div>
